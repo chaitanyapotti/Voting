@@ -10,7 +10,7 @@ contract StakedToken is FreezableToken {
 
     struct Stake {
         uint amount;
-        Timeperiod time;
+        uint endTime;
     }
 
     struct stakebalance {
@@ -23,11 +23,11 @@ contract StakedToken is FreezableToken {
 
     event Staked(address target, uint amount, uint endTime);
 
-    mapping(address => mapping(address => Stake[8])) stakedTokens; //stake[].length <= 8
+    mapping(address => mapping(address => Stake[4])) stakedTokens; //stake[].length <= 8
 
     //Transfer / stake - we check prev stakes and delete expired ones delete arr[]
 
-    mapping(address => address[5]) stakedAddresses; //stake for 5 addresses
+    mapping(address => address[10]) stakedAddresses; //stake for 5 addresses
 
     mapping(address => stakebalance) stakedbalances;
 
