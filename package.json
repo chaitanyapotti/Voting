@@ -1,7 +1,7 @@
 {
   "name": "voting",
   "version": "1.0.0",
-  "description": "Voting Standard",
+  "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
     "test": "truffle test"
@@ -17,7 +17,8 @@
     "contracts",
     "protocol",
     "electus",
-    "voting"
+    "voting",
+    "eip-1400"
   ],
   "author": "chaitanya potti",
   "license": "MIT",
