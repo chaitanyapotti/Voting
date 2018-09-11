@@ -1,35 +1,57 @@
 pragma solidity ^0.4.24;
 
-import "./FreezableToken.sol";
+import "./ERC20Token.sol";
+import "../ownership/Authorizable.sol";
+import "./IStakeableToken.sol";
 
 
 //Authorizable because contracts(poll) can freeze funds
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
-contract StakedToken is FreezableToken {
+contract StakedToken is ERC20Token, Authorizable, IStakeable {
+
+    uint public minStakeAmount;
 
     struct Stake {
         uint amount;
         uint endTime;
     }
 
-    struct stakebalance {
+    struct StakeBalance {
         uint stakedBalance; //stakedbalance + spendablebalance = balanceOfUser
-        uint spendableBalance;
+        uint transferableBalance;
         uint stakedAgainstBalance;
         uint stakeWeight;  //token * time
         uint lastStakedAt;
     }
 
-    event Staked(address target, uint amount, uint endTime);
+    event Staked(address indexed from, address indexed target, uint indexed endTime, uint amount, bytes32 data);
 
-    mapping(address => mapping(address => Stake[4])) stakedTokens; //stake[].length <= 8
+    mapping(address => mapping(address => Stake[3])) stakedTokens; //stake[].length <= 3
 
     //Transfer / stake - we check prev stakes and delete expired ones delete arr[]
 
-    mapping(address => address[10]) stakedAddresses; //stake for 5 addresses
+    mapping(address => address[15]) stakedAddresses; //stake for 15 addresses
 
-    mapping(address => stakebalance) stakedbalances;
+    mapping(address => StakeBalance) stakedbalances;
+
+    constructor(uint _minStakeAmount) public {
+        minStakeAmount = _minStakeAmount;
+    }
+
+    function stakeFor(address _to, uint _amount, uint _endTime, bytes32 data) external {
+        require(to != address(0), "Don't stake to zero address");
+        require(_amount >= minStakeAmount, "Amount less than Minimum Stake amount of (in ether) " + SafeMath.mul(minStakeAmount * 10^-18));
+        Stake[] storage currentStakes = stakedTokens[msg.sender][_to];
+        
+        for (uint8 index = 0; index < currentStakes.length; index++) {
+            if(currentStakes[index].amount == 0) {
+                currentStakes[index] = Stake({amount: _amount, endTime: _endTime});
+            }
+        }
+        if(!isOldAddress) stakedAddresses.push(_to);
+
+    }
 
 
 
