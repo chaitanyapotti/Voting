@@ -10,6 +10,8 @@ import "./IStakeableToken.sol";
 //This can be inherited because Authorizable is deployed with Freezable Token
 contract StakedToken is ERC20Token, Authorizable, IStakeable {
 
+    uint[8] public timePeriods;
+
     uint public minStakeAmount;
 
     struct Stake {
@@ -20,7 +22,7 @@ contract StakedToken is ERC20Token, Authorizable, IStakeable {
     struct StakeBalance {
         uint stakedBalance; //stakedbalance + spendablebalance = balanceOfUser
         uint transferableBalance;
-        uint stakedAgainstBalance;
+        mapping(uint => uint) stakedAgainstBalance;
         uint stakeWeight;  //token * time
         uint lastStakedAt;
     }
@@ -33,7 +35,78 @@ contract StakedToken is ERC20Token, Authorizable, IStakeable {
 
     mapping(address => address[15]) stakedAddresses; //stake for 15 addresses
 
-    mapping(address => StakeBalance) stakedbalances;
+    mapping(address => StakeBalance) stakedBalances;
+
+    function getCurrentStakeWeight(address _user) external returns (uint){
+        
+    }
+
+    function getTotalStakedFor(address _to) external returns (uint){
+        uint TotalStakedFor = 0;
+        address[15] storage addresses = stakedAddresses[_to];
+        for (uint index = 0; index < addresses.length; index++){
+            addresse = adresses[index];
+            if (addresse == msg.sender){
+                for (uint index = 0; index< stakedTokens[_to][addresse].length){
+                    if (stakedTokens[_to][addresse].endTime > now){
+                        TotalStakedFor += 1
+                    }
+                }
+            }
+        }
+        return TotalStakedFor;
+    }
+
+    function getStakedToAddresses(address _user) external returns (address[15]){
+        address[15] storage addresses = stakedAddresses[_user];
+        address[] stakedToAddresses;
+        for (uint index = 0; index < addresses.length; index++){
+            address addresse = adresses[index];
+            stake[3] storage tokens = stakedTokens[_user][addresse];
+            for (uint index = 0; index < tokens.length; index++){
+                if (tokens[index].endTime > now){
+                    stakedToAddresses.push(addresse);
+                    continue;
+                }
+            }
+        }
+        return stakedToAddresses;
+    }
+
+    function getStakeableBalance(address _user) external returns (uint){
+        uint stakeableBalance = balanceOf(_user) - getTotalStakedBalance(_user) + getTotalStakedAgainstBalance(_user);
+        return stakeableBalance;
+    }
+
+    function getTransferableBalance(address _user) external returns (uint){
+        uint transferableBalance = balanceOf(_user) - getTotalStakedBalance(_user);
+        return transferableBalance;
+    }
+
+    function getTotalStakedAgainstBalance(address _user) external returns (uint){
+        uint stakedAgainstBalance = 0;
+        for (uint8 index = 0; index < timePeriods.length; index++){
+            if (timeperiods[index] > now){
+                stakedAgainstBalance += stakedBalances[_user].stakedAgainstBalance[timeperiods[index]];
+            }
+        }
+        return stakedAgainstBalance;
+    }
+
+    function getTotalStakedBalance(address _user) external returns (uint) {
+        address[15] storage addresses = stakedAddresses[_user];
+        require(addresses[0] != address(0),"You dont have any stakes");
+        uint stakedBalance = 0;
+        for (uint8 index = 0; index < addresses.length; index++){
+            Stake[3] storage stakeArray = stakedTokens[_user][addresses[index]];
+            for (uint8 index = 0; index < stakeArray.length; index++){
+                if (stakeArray[index].endTime > now) {
+                    stakedBalance += stakeArray[index].amount;
+                }
+            }
+        }
+        return stakedBalance;
+    }
 
     constructor(uint _minStakeAmount) public {
         minStakeAmount = _minStakeAmount;
@@ -52,6 +125,19 @@ contract StakedToken is ERC20Token, Authorizable, IStakeable {
         if(!isOldAddress) stakedAddresses.push(_to);
 
     }
+
+    function stake(uint _amount, uint _endTime, bytes32 data) external;
+    function increaseStake(uint _amount, uint _endTime, bytes32 data) external;
+    function increaseStakeFor(address _to, uint _amount, uint _endTime, bytes32 data) external;
+    function getTotalStakedBalance(address _user) external returns (uint) {
+
+    }
+    function getTotalStakedAgainstBalance(address _user) external returns (uint);
+    function getTransferableBalance(address _user) external returns (uint);
+    function getStakeableBalance(address _user) external returns (uint);
+    function getCurrentStakeWeight(address _user) external returns (uint);
+    function getStakedToAddresses(address _user) external returns (address[15]);
+    function getTotalStakedFor(address _to) external returns (uint);
 
 
 
