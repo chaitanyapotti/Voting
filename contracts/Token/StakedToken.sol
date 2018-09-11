@@ -3,6 +3,8 @@ pragma solidity ^0.4.24;
 import "./ERC20Token.sol";
 import "../ownership/Authorizable.sol";
 import "./IStakeableToken.sol";
+import "openzeppelin-solidity/contracts/AddressUtils.sol";
+import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 
 
 //Authorizable because contracts(poll) can freeze funds
@@ -11,6 +13,8 @@ import "./IStakeableToken.sol";
 contract StakedToken is ERC20Token, Authorizable, IStakeable {
 
     uint public minStakeAmount;
+    uint public maxStakePeriod;
+    uint public minStakePeriod;
 
     struct Stake {
         uint amount;
@@ -35,22 +39,33 @@ contract StakedToken is ERC20Token, Authorizable, IStakeable {
 
     mapping(address => StakeBalance) stakedbalances;
 
-    constructor(uint _minStakeAmount) public {
+    constructor(uint _minStakeAmount, uint _minStakePeriod, uint _maxStakePeriod) public {
         minStakeAmount = _minStakeAmount;
+        maxStakePeriod = _maxStakePeriod;
+        minStakePeriod = _minStakePeriod;
     }
 
     function stakeFor(address _to, uint _amount, uint _endTime, bytes32 data) external {
         require(to != address(0), "Don't stake to zero address");
         require(_amount >= minStakeAmount, "Amount less than Minimum Stake amount of (in ether) " + SafeMath.mul(minStakeAmount * 10^-18));
-        Stake[] storage currentStakes = stakedTokens[msg.sender][_to];
+        require(AddressUtils.isContract(_to), "Must only stake to contracts and not EOA's");
+        IElectusProtocol protocolContract = IElectusProtocol(_to);
+        require(protocolContract.isCurrentMember(msg.sender), "User doesn't hold a membership from entity he wants to stake against");
+        require(_endTime > now && _endTime - now > minStakePeriod && _endTime - now < maxStakePeriod, "Time period doesn't satisfy the requirements");
+
         
+        
+        Stake[] storage currentStakes = stakedTokens[msg.sender][_to];
+        bool isVacant = false;
         for (uint8 index = 0; index < currentStakes.length; index++) {
+            //handle same endtime -- increase amount
             if(currentStakes[index].amount == 0) {
                 currentStakes[index] = Stake({amount: _amount, endTime: _endTime});
             }
         }
         if(!isOldAddress) stakedAddresses.push(_to);
 
+        emit Staked(msg.sender, _to, _endTime, _amount, data);
     }
 
 
