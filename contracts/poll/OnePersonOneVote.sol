@@ -9,21 +9,23 @@ contract OnePersonOneVote is BasePoll {
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames) public BasePoll(_protocolAddresses, _proposalNames) {
         
     }
-
     
-    function calculateVoteWeight(address _to) external returns (uint) {
+    function calculateVoteWeight(address _to) external pure returns (uint) {
         return 1;
     }
 
-    function vote(uint8 _proposal) external isValidVoter {
+    function vote(uint8 _proposal) external {
         Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
-        sender.vote = _proposal;
-        sender.weight = calculateVoteWeight(msg.sender);
-
-        proposals[proposal].voteWeight += sender.weight;
-        proposals[proposal].voteCount += 1;
+        uint voteWeight = calculateVoteWeight(msg.sender);
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
+        if(canVote(msg.sender) && !sender.voted) {
+            sender.voted = true;
+            sender.vote = _proposal;
+            sender.weight = voteWeight;
+            proposals[proposal].voteWeight += sender.weight;
+            proposals[proposal].voteCount += 1;
+            emit CastVote(msg.sender, _proposal, sender.weight);
+        }
     }
 
     function revokeVote() external isValidVoter {
@@ -35,6 +37,4 @@ contract OnePersonOneVote is BasePoll {
         sender.vote = 0;
         sender.weight = 0;
     }
-
-    function onPollFinish(uint _winningProposal) external;
 }

@@ -28,12 +28,18 @@ contract BasePoll /*is IPoll */{
 
     mapping(address => Voter) public voters;
 
+    event TriedToVote(address indexed _from, uint indexed _to, uint voteWeight);
+    event CastVote(address indexed _from, uint indexed _to, uint voteWeight);
+    event RevokedVote(address indexed _from, uint indexed _to, uint voteWeight);
+
     modifier isValidVoter() {
         require(canVote(msg.sender), "Not a valid voter");
         _;
     }
 
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames) public {
+        //Make sure _proposalNames length < 32
+        require(_proposalNames.length <= 32, "Proposals must be less than 32");
         protocolAddresses = _protocolAddresses;
         voterBaseLogic = ""; //initialize here
         pollName = ""; //initialize here
@@ -60,17 +66,19 @@ contract BasePoll /*is IPoll */{
     }
 
     function getProposals() external view returns (bytes32[]) {
-        uint proposalCount = proposals.length;
+        uint8 proposalCount = proposals.length;
         bytes32[] memory proposalNames = new bytes32[proposalCount];
-        for(uint index = 0; index < proposals.length; index++) {
+        for(uint8 index = 0; index < proposals.length; index++) {
             proposalNames[index] = proposals[index].name;
         }
         return proposalNames;
     }
 
     function canVote(address _to) external view returns (bool) {
-        //This is to be filled by user before deploying poll. Can't be modified after poll is deployed
-        return IElectusProtocol(protocolAddresses[0]).isCurrentMember(_to) && IElectusProtocol(protocolAddresses[1]).isCurrentMember(_to);
+        //This is to be filled by user before deploying poll. Can't be modified after poll is deployed. Here is a sample.
+        //You can also use attributes to set parameters here
+        return IElectusProtocol(protocolAddresses[0]).isCurrentMember(_to) && IElectusProtocol(protocolAddresses[1]).isCurrentMember(_to)
+        && (IElectusProtocol(protocolAddresses[2]).getAttributeByName(_to, 'Country') == 'India');
     }
 
     function getVoteTally(uint _proposalId) external view returns (uint) {
@@ -78,9 +86,9 @@ contract BasePoll /*is IPoll */{
     }
 
     function getVoteTallies() external view returns (uint[]) {
-        uint proposalCount = proposals.length;
+        uint8 proposalCount = proposals.length;
         uint[] memory proposalWeights = new bytes32[proposalCount];
-        for(uint index = 0; index < proposals.length; index++) {
+        for(uint8 index = 0; index < proposals.length; index++) {
             proposalWeights[index] = proposals[index].voteWeight;
         }
         return proposalWeights;
@@ -91,18 +99,18 @@ contract BasePoll /*is IPoll */{
     }
 
     function getVoterCounts() external view returns (uint[]) {
-        uint proposalCount = proposals.length;
+        uint8 proposalCount = proposals.length;
         uint[] memory proposalCounts = new bytes32[proposalCount];
-        for(uint index = 0; index < proposals.length; index++) {
+        for(uint8 index = 0; index < proposals.length; index++) {
             proposalCounts[index] = proposals[index].voteCount;
         }
         return proposalCounts;
     }
 
-    function winningProposal() external view returns (uint) {
-        uint winningProposal = 0;
+    function winningProposal() external view returns (uint8) {
+        uint8 winningProposal = 0;
         uint winningVoteCount = 0;
-        for (uint p = 0; p < proposals.length; p++) {
+        for (uint8 p = 0; p < proposals.length; p++) {
             if (proposals[p].voteCount > winningVoteCount) {
                 winningVoteCount = proposals[p].voteCount;
                 winningProposal = p;
@@ -112,7 +120,6 @@ contract BasePoll /*is IPoll */{
     }
 
     function calculateVoteWeight(address _to) external returns (uint);
-    function vote(uint _proposalId) external;
+    function vote(uint8 _proposalId) external;
     function revokeVote() external;
-    function onPollFinish(uint _winningProposal) external;
 }

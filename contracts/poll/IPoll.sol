@@ -4,7 +4,6 @@ pragma solidity ^0.4.24;
 interface IPoll {
     event TriedToVote(address indexed _from, uint indexed _to, uint voteWeight);
     event CastVote(address indexed _from, uint indexed _to, uint voteWeight);
-
     event RevokedVote(address indexed _from, uint indexed _to, uint voteWeight);
 
     //gets the name of the poll e.g.: "Admin Election for Autumn 2018"
@@ -31,9 +30,8 @@ interface IPoll {
     function calculateVoteWeight(address _to) external view returns (uint);
     //don't throw at all.. change state if canVote() .. else log
 
-    function winningProposal() external view returns (uint);
+    function winningProposal() external view returns (uint8);
 
-    function vote(uint _proposalId) external;
+    function vote(uint8 _proposalId) external;
     function revokeVote() external;
-    function onPollFinish(uint _winningProposal) external;
 }
