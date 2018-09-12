@@ -99,6 +99,18 @@ contract BasePoll /*is IPoll */{
         return proposalCounts;
     }
 
+    function winningProposal() external view returns (uint) {
+        uint winningProposal = 0;
+        uint winningVoteCount = 0;
+        for (uint p = 0; p < proposals.length; p++) {
+            if (proposals[p].voteCount > winningVoteCount) {
+                winningVoteCount = proposals[p].voteCount;
+                winningProposal = p;
+            }
+        }
+        return winningProposal;
+    }
+
     function calculateVoteWeight(address _to) external returns (uint);
     function vote(uint _proposalId) external;
     function revokeVote() external;

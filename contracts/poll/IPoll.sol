@@ -30,6 +30,9 @@ interface IPoll {
 
     function calculateVoteWeight(address _to) external view returns (uint);
     //don't throw at all.. change state if canVote() .. else log
+
+    function winningProposal() external view returns (uint);
+
     function vote(uint _proposalId) external;
     function revokeVote() external;
     function onPollFinish(uint _winningProposal) external;
