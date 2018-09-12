@@ -17,16 +17,16 @@ contract TokenProportionalCapped is BasePoll {
     public BasePoll(_protocolAddresses, _proposalNames) {
         token = IFreezableToken(_tokenAddress);
         capPercent = _capPercent;
-        capWeight = SafeMath.safeMul(_capPercent, token.totalSupply());
+        capWeight = SafeMath.mul(_capPercent, token.totalSupply());
         require(_capPercent < 100, "Percentage must be less than 100");
     }
 
-    function calculateVoteWeight(address _to) external view returns (uint) {
-        uint currentWeight = SafeMath.safeMul(token.balanceOf(_to), 100);
+    function calculateVoteWeight(address _to) public view returns (uint) {
+        uint currentWeight = SafeMath.mul(token.balanceOf(_to), 100);
         return currentWeight > capWeight ? capWeight : currentWeight;
     }
 
-    function vote(uint _proposal) external {
+    function vote(uint8 _proposal) external {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
         //vote weight is multiplied by 100 to account for decimals
@@ -35,8 +35,8 @@ contract TokenProportionalCapped is BasePoll {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
-            proposals[proposal].voteWeight += sender.weight;
-            proposals[proposal].voteCount += 1;
+            proposals[_proposal].voteWeight += sender.weight;
+            proposals[_proposal].voteCount += 1;
             emit CastVote(msg.sender, _proposal, sender.weight);
             //Need to check whether we can freeze or not.!
             token.freezeAccount(msg.sender);
@@ -46,11 +46,14 @@ contract TokenProportionalCapped is BasePoll {
     function revokeVote() external isValidVoter {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
+        uint votedProposal = sender.vote;
+        uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;
         sender.weight = 0;
+        emit RevokedVote(msg.sender, votedProposal, voteWeight);
         token.unFreezeAccount(msg.sender);
     }
 }

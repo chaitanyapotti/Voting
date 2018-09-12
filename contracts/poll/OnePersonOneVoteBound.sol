@@ -9,16 +9,15 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract OnePersonOneVoteBound is BasePollBound {
 
-    constructor(address[] _protocolAddresses, address _authorizable, bytes32[] _proposalNames, 
-    uint _startTime, uint _endTime) public BasePollBound(_protocolAddresses, _authorizable, _proposalNames,
-    _startTime, _endTime) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime) 
+        public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime) {
     }
 
-    function calculateVoteWeight(address _to) external pure returns (uint) {
+    function calculateVoteWeight(address _to) public view returns (uint) {
         return 1;
     }
 
-    function vote(uint8 _proposal) public checkTime {
+    function vote(uint8 _proposal) external checkTime {
        Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
         emit TriedToVote(msg.sender, _proposal, voteWeight);
@@ -26,19 +25,22 @@ contract OnePersonOneVoteBound is BasePollBound {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
-            proposals[proposal].voteWeight += sender.weight;
-            proposals[proposal].voteCount += 1;
+            proposals[_proposal].voteWeight += sender.weight;
+            proposals[_proposal].voteCount += 1;
             emit CastVote(msg.sender, _proposal, sender.weight);
         }
     }
 
-    function revokeVote() public isValidVoter checkTime {
+    function revokeVote() external isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
+        uint votedProposal = sender.vote;
+        uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;
         sender.weight = 0;
+        emit RevokedVote(msg.sender, votedProposal, voteWeight);
     }
 }

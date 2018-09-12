@@ -9,9 +9,8 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract KarmaVoteBound is BasePollBound {
 
-    constructor(address _electusProtocol, address _authorizable, bytes32[] _proposalNames, 
-    uint _startTime, uint _endTime) public BasePollBound(_electusProtocol, _authorizable, _proposalNames,
-    _startTime, _endTime) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime) 
+        public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime) {
     }
 
     function calculateVoteWeight(address _to) public view returns (uint) {
@@ -20,10 +19,10 @@ contract KarmaVoteBound is BasePollBound {
         return sender.weight;
     }
 
-    function vote(uint8 proposal) external isValidVoter checkTime {
+    function vote(uint8 _proposal) external checkTime {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        emit TriedToVote(msg.sender, _propsal, voteWeight);
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
         if (canVote(msg.sender) && !sender.voted){
             sender.voted = true;
             sender.vote = _proposal;
@@ -34,11 +33,11 @@ contract KarmaVoteBound is BasePollBound {
         }
     }
 
-    function revokeVote() public isValidVoter checkTime {
+    function revokeVote() external isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
         uint votedProposal = sender.vote;
-        uint voteWeight = sender.voteWeight;
+        uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;

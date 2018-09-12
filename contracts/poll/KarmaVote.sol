@@ -6,7 +6,7 @@ import "./BasePoll.sol";
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter
 contract KarmaVote is BasePoll {
 
-    constructor(address _electusProtocol, bytes32[] _proposalNames) public BasePoll(_electusProtocol, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames) public BasePoll(_protocolAddresses, _proposalNames) {
         
     }
 
@@ -19,7 +19,7 @@ contract KarmaVote is BasePoll {
     function vote(uint8 _proposal) external {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        emit TriedToVote(msg.sender, _propsal, voteWeight);
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
         if (canVote(msg.sender) && !sender.voted){
             sender.voted = true;
             sender.vote = _proposal;
@@ -34,7 +34,7 @@ contract KarmaVote is BasePoll {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
         uint votedProposal = sender.vote;
-        uint voteWeight = sender.voteWeight;
+        uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;

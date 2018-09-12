@@ -21,8 +21,8 @@ contract ERC20Token is IERC20Token {
         require(_to != address(0));
         require(balances[msg.sender] >= _value);
 
-        balances[msg.sender] = SafeMath.safeSub(balances[msg.sender], _value);
-        balances[_to] = SafeMath.safeAdd(balances[_to], _value);
+        balances[msg.sender] = SafeMath.sub(balances[msg.sender], _value);
+        balances[_to] = SafeMath.add(balances[_to], _value);
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
@@ -31,9 +31,9 @@ contract ERC20Token is IERC20Token {
         require(_to != address(0));
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value);
 
-        balances[_to] = SafeMath.safeAdd(balances[_to], _value);
-        balances[_from] = SafeMath.safeSub(balances[_from], _value);
-        allowed[_from][msg.sender] = SafeMath.safeSub(allowed[_from][msg.sender], _value);
+        balances[_to] = SafeMath.add(balances[_to], _value);
+        balances[_from] = SafeMath.sub(balances[_from], _value);
+        allowed[_from][msg.sender] = SafeMath.sub(allowed[_from][msg.sender], _value);
         emit Transfer(_from, _to, _value);
         return true;
     }

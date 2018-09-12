@@ -21,11 +21,11 @@ contract BasePollBound is BasePoll {
         endTime = _endTime;
     }
 
-    function hasPollStarted() public returns (bool) {
+    function hasPollStarted() public view returns (bool) {
         return (now >= startTime && now <= endTime);
     }
 
-    function hasPollEnded() public returns (bool) {
+    function hasPollEnded() public view returns (bool) {
         return (now > endTime);
     }
 }
