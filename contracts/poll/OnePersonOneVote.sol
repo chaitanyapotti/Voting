@@ -10,7 +10,7 @@ contract OnePersonOneVote is BasePoll {
         
     }
     
-    function calculateVoteWeight(address _to) external pure returns (uint) {
+    function calculateVoteWeight(address _to) public view returns (uint) {
         return 1;
     }
 
@@ -22,8 +22,8 @@ contract OnePersonOneVote is BasePoll {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
-            proposals[proposal].voteWeight += sender.weight;
-            proposals[proposal].voteCount += 1;
+            proposals[_proposal].voteWeight += sender.weight;
+            proposals[_proposal].voteCount += 1;
             emit CastVote(msg.sender, _proposal, sender.weight);
         }
     }
@@ -31,10 +31,13 @@ contract OnePersonOneVote is BasePoll {
     function revokeVote() external isValidVoter {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
-        sender.voted = false;
+        uint votedProposal = sender.vote;
+        uint voteWeight = sender.weight;
+        sender.voted = false;        
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;
         sender.weight = 0;
+        emit RevokedVote(msg.sender, votedProposal, voteWeight);
     }
 }

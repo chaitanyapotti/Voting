@@ -50,7 +50,7 @@ contract BasePoll /*is IPoll */{
     }
 
     function getName() external view returns (string) {
-        return name;
+        return pollName;
     }
 
     function getPollType() external view returns (string) {
@@ -66,19 +66,20 @@ contract BasePoll /*is IPoll */{
     }
 
     function getProposals() external view returns (bytes32[]) {
-        uint8 proposalCount = proposals.length;
-        bytes32[] memory proposalNames = new bytes32[proposalCount];
+        bytes32[] memory proposalNames = new bytes32[](32);
         for(uint8 index = 0; index < proposals.length; index++) {
-            proposalNames[index] = proposals[index].name;
+            proposalNames[index] = (proposals[index].name);
         }
         return proposalNames;
     }
 
-    function canVote(address _to) external view returns (bool) {
+    function canVote(address _to) public view returns (bool) {
         //This is to be filled by user before deploying poll. Can't be modified after poll is deployed. Here is a sample.
         //You can also use attributes to set parameters here
-        return IElectusProtocol(protocolAddresses[0]).isCurrentMember(_to) && IElectusProtocol(protocolAddresses[1]).isCurrentMember(_to)
-        && (IElectusProtocol(protocolAddresses[2]).getAttributeByName(_to, 'Country') == 'India');
+        IERC1261 contract1 = IERC1261(protocolAddresses[0]);
+        IERC1261 contract2 = IERC1261(protocolAddresses[1]);
+        IERC1261 contract3 = IERC1261(protocolAddresses[2]);
+        return contract1.isCurrentMember(_to) && contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India');
     }
 
     function getVoteTally(uint _proposalId) external view returns (uint) {
@@ -86,8 +87,7 @@ contract BasePoll /*is IPoll */{
     }
 
     function getVoteTallies() external view returns (uint[]) {
-        uint8 proposalCount = proposals.length;
-        uint[] memory proposalWeights = new bytes32[proposalCount];
+        uint[] memory proposalWeights = new uint[](32);
         for(uint8 index = 0; index < proposals.length; index++) {
             proposalWeights[index] = proposals[index].voteWeight;
         }
@@ -98,9 +98,8 @@ contract BasePoll /*is IPoll */{
         return proposals[_proposalId].voteCount;
     }
 
-    function getVoterCounts() external view returns (uint[]) {
-        uint8 proposalCount = proposals.length;
-        uint[] memory proposalCounts = new bytes32[proposalCount];
+    function getVoterCounts() external view returns (uint[]) {        
+        uint[] memory proposalCounts = new uint[](32);
         for(uint8 index = 0; index < proposals.length; index++) {
             proposalCounts[index] = proposals[index].voteCount;
         }
@@ -108,18 +107,18 @@ contract BasePoll /*is IPoll */{
     }
 
     function winningProposal() external view returns (uint8) {
-        uint8 winningProposal = 0;
+        uint8 winningProposalIndex = 0;
         uint winningVoteCount = 0;
         for (uint8 p = 0; p < proposals.length; p++) {
             if (proposals[p].voteCount > winningVoteCount) {
                 winningVoteCount = proposals[p].voteCount;
-                winningProposal = p;
+                winningProposalIndex = p;
             }
         }
-        return winningProposal;
+        return winningProposalIndex;
     }
 
-    function calculateVoteWeight(address _to) external returns (uint);
+    function calculateVoteWeight(address _to) public view returns (uint);
     function vote(uint8 _proposalId) external;
     function revokeVote() external;
 }

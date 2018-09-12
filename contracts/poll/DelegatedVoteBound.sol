@@ -9,9 +9,8 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract DelegatedVoteBound is BasePollBound {
 
-    constructor(address[] _electusProtocol, address _authorizable, bytes32[] _proposalNames, 
-    uint _startTime, uint _endTime) public BasePollBound(_electusProtocol, _authorizable, _proposalNames,
-    _startTime, _endTime) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime) 
+        public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime) {
     }
 
     function calculateVoteWeight(address _to) public view returns (uint) {
@@ -21,10 +20,10 @@ contract DelegatedVoteBound is BasePollBound {
         return sender.weight;
     }
 
-    function vote(uint8 proposal) public checkTime {
+    function vote(uint8 _proposal) external checkTime {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        emit TriedToVote(msg.sender, _propsal, voteWeight);
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
         if(canVote(msg.sender) && !sender.voted && sender.delegate == address(0)){
             sender.weight = voteWeight;
             sender.voted = true;

@@ -34,7 +34,7 @@ contract Authorizable is Ownable {
         authorized[msg.sender] = false;
     }
 
-    function transferAuthorization(address _to) public isAuthorized {
+    function transferAuthorization(address _to) public onlyAuthorized {
         require(msg.sender != owner, "Owner can't transfer authorization");
         authorized[msg.sender] = false;
         authorized[_to] = true;
