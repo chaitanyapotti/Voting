@@ -14,73 +14,39 @@ contract KarmaVoteBound is BasePollBound {
     _startTime, _endTime) {
     }
 
-    function vote(uint8 proposal) public isCurrentMember checkTime {
-        Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
-        sender.vote = proposal;
-        if (sender.weight == 0) {
-            sender.weight = 1;
-        }
-
-        proposals[proposal].voteCount += sender.weight;
+    function calculateVoteWeight(address _to) public view returns (uint) {
+        Voter storage sender = voters[_to];
+        if(sender.weight == 0) return 1;
+        return sender.weight;
     }
 
-    function revokeVote() public isCurrentMember checkTime {
+    function vote(uint8 proposal) external isValidVoter checkTime {
+        Voter storage sender = voters[msg.sender];
+        uint voteWeight = calculateVoteWeight(msg.sender);
+        emit TriedToVote(msg.sender, _propsal, voteWeight);
+        if (canVote(msg.sender) && !sender.voted){
+            sender.voted = true;
+            sender.vote = _proposal;
+            sender.weight = voteWeight;
+            proposals[_proposal].voteCount += voteWeight;
+            proposals[_proposal].voteCount += 1;
+            emit CastVote(msg.sender, _proposal, voteWeight);
+        }
+    }
+
+    function revokeVote() public isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
+        uint votedProposal = sender.vote;
+        uint voteWeight = sender.voteWeight;
         sender.voted = false;
-        proposals[sender.vote].voteCount -= sender.weight;
+        proposals[sender.vote].voteWeight -= sender.weight;
+        proposals[sender.vote].voteCount -= 1;
+
         sender.vote = 0;
-    }
-
-    function finalizePoll() public isAuthorized {
-        require(now > endTime, "Poll has not ended");
-        uint winningVoteCount = 0;
-        uint8 winningProposal_ = 0;
-        for (uint8 p = 0; p < proposals.length; p++) {
-            if (proposals[p].voteCount > winningVoteCount) {
-                winningVoteCount = proposals[p].voteCount;
-                winningProposal_ = p;
-            }
+        if (sender.weight == 1) {
+            sender.weight = 0;
         }
-        onPollFinish(winningProposal_);
-    }
-
-    function delegate(address to) public isCurrentMember {
-        Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "You already voted.");
-        require(to != msg.sender, "Self-delegation is disallowed.");
-        require(protocol.isCurrentMember(to), "Not an electus member");
-        if (sender.weight == 0) {
-            sender.weight = 1;
-        }
-        // Forward the delegation as long as
-        // `to` also delegated.
-        // In general, such loops are very dangerous,
-        // because if they run too long, they might
-        // need more gas than is available in a block.
-        // In this case, the delegation will not be executed,
-        // but in other situations, such loops might
-        // cause a contract to get "stuck" completely.
-        while (voters[to].delegate != address(0)) {
-            to = voters[to].delegate;
-
-            // We found a loop in the delegation, not allowed.
-            require(to != msg.sender, "Found loop in delegation.");
-        }
-
-        // sender.voted = true;
-        sender.delegate = to;
-        Voter storage delegate_ = voters[to];
-        if (delegate_.voted) {
-            // If the delegate already voted,
-            // directly add to the number of votes
-            proposals[delegate_.vote].voteCount += sender.weight;
-        } else {
-            // If the delegate did not vote yet,
-            // add to her weight.
-            delegate_.weight += sender.weight;
-        }
+        emit RevokedVote(msg.sender, votedProposal, voteWeight);
     }
 }
