@@ -6,43 +6,44 @@ import "../Token/IFreezableToken.sol";
 
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter. 
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
+//All poll contracts post deployment must be authorized in the authorizable
 contract TokenProportionalUncapped is BasePoll {
 
     IFreezableToken public token;
 
-    constructor(address _electusProtocol, bytes32[] _proposalNames, address _tokenAddress) 
-    public BasePoll(_electusProtocol, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress) 
+    public BasePoll(_protocolAddresses, _proposalNames) {
         token = IFreezableToken(_tokenAddress);
     }
 
-    function vote(uint proposal) public isCurrentMember {
-        Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
-        sender.vote = proposal;
-        sender.weight = token.balanceOf(msg.sender);
-        proposals[proposal].voteCount += sender.weight;
-        //Need to check whether we can freeze or not.!
-        token.freezeAccount(msg.sender);
+    function calculateVoteWeight(address _to) external view returns (uint) {
+        return token.balanceOf(_to);
     }
 
-    function revokeVote() public isCurrentMember {
+    function vote(uint _proposal) external {
+        Voter storage sender = voters[msg.sender];
+        uint voteWeight = calculateVoteWeight(msg.sender);
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
+        if(canVote(msg.sender) && !sender.voted) {
+            sender.voted = true;
+            sender.vote = _proposal;
+            sender.weight = voteWeight;
+            proposals[proposal].voteWeight += sender.weight;
+            proposals[proposal].voteCount += 1;
+            emit CastVote(msg.sender, _proposal, sender.weight);
+            //Need to check whether we can freeze or not.!
+            token.freezeAccount(msg.sender);
+        }
+    }
+
+    function revokeVote() external isValidVoter {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
         sender.voted = false;
-        proposals[sender.vote].voteCount -= sender.weight;
+        proposals[sender.vote].voteWeight -= sender.weight;
+        proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;
         sender.weight = 0;
         token.unFreezeAccount(msg.sender);
-    }
-
-    function countVotes() public view returns (uint8 winningProposal_) {
-        uint winningVoteCount = 0;
-        for (uint8 p = 0; p < proposals.length; p++) {
-            if (proposals[p].voteCount > winningVoteCount) {
-                winningVoteCount = proposals[p].voteCount;
-                winningProposal_ = p;
-            }
-        }        
     }
 }

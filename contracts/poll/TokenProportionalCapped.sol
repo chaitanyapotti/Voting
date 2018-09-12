@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "./BasePoll.sol";
-import "../math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Token/IFreezableToken.sol";
 
 
@@ -10,44 +10,47 @@ import "../Token/IFreezableToken.sol";
 contract TokenProportionalCapped is BasePoll {
 
     IFreezableToken public token;
-    uint8 public capPercent;
+    uint public capPercent;
+    uint public capWeight;
 
-    constructor(address _electusProtocol, bytes32[] _proposalNames, address _tokenAddress, uint8 _capPercent) 
-    public BasePoll(_electusProtocol, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent) 
+    public BasePoll(_protocolAddresses, _proposalNames) {
         token = IFreezableToken(_tokenAddress);
         capPercent = _capPercent;
+        capWeight = SafeMath.safeMul(_capPercent, token.totalSupply());
+        require(_capPercent < 100, "Percentage must be less than 100");
     }
 
-    function vote(uint proposal) public isCurrentMember {
+    function calculateVoteWeight(address _to) external view returns (uint) {
+        uint currentWeight = SafeMath.safeMul(token.balanceOf(_to), 100);
+        return currentWeight > capWeight ? capWeight : currentWeight;
+    }
+
+    function vote(uint _proposal) external {
         Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
-        sender.vote = proposal;
-        //Reduce gas consumption here
-        sender.weight = SafeMath.safeMul(SafeMath.safeDiv(token.balanceOf(msg.sender), 
-        token.totalSupply()), 100) > capPercent ? capPercent : SafeMath.safeDiv(token.balanceOf(msg.sender), 
-        token.totalSupply());
-        proposals[proposal].voteCount += sender.weight;
-        token.freezeAccount(msg.sender);
+        uint voteWeight = calculateVoteWeight(msg.sender);
+        //vote weight is multiplied by 100 to account for decimals
+        emit TriedToVote(msg.sender, _proposal, voteWeight);
+        if(canVote(msg.sender) && !sender.voted) {
+            sender.voted = true;
+            sender.vote = _proposal;
+            sender.weight = voteWeight;
+            proposals[proposal].voteWeight += sender.weight;
+            proposals[proposal].voteCount += 1;
+            emit CastVote(msg.sender, _proposal, sender.weight);
+            //Need to check whether we can freeze or not.!
+            token.freezeAccount(msg.sender);
+        }
     }
 
-    function revokeVote() public isCurrentMember {
+    function revokeVote() external isValidVoter {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
         sender.voted = false;
-        proposals[sender.vote].voteCount -= sender.weight;
+        proposals[sender.vote].voteWeight -= sender.weight;
+        proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;
         sender.weight = 0;
         token.unFreezeAccount(msg.sender);
-    }
-
-    function countVotes() public view returns (uint8 winningProposal_) {
-        uint winningVoteCount = 0;
-        for (uint8 p = 0; p < proposals.length; p++) {
-            if (proposals[p].voteCount > winningVoteCount) {
-                winningVoteCount = proposals[p].voteCount;
-                winningProposal_ = p;
-            }
-        }        
     }
 }
