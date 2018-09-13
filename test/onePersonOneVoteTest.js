@@ -29,9 +29,6 @@ contract("OnePersonOneVoteTest", function(accounts) {
     );
   });
   it("setup1", async () => {
-    console.log(protocol1Contract.address);
-    console.log(protocol2Contract.address);
-    console.log(protocol3Contract.address);
     console.log(await pollContract.getProtocolAddresses());
   });
   it("setup2", async () => {
