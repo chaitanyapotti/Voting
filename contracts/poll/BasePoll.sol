@@ -28,9 +28,9 @@ contract BasePoll /*is IPoll */{
 
     mapping(address => Voter) public voters;
 
-    event TriedToVote(address indexed _from, uint indexed _to, uint voteWeight);
-    event CastVote(address indexed _from, uint indexed _to, uint voteWeight);
-    event RevokedVote(address indexed _from, uint indexed _to, uint voteWeight);
+    event TriedToVote(address _from, uint _to, uint voteWeight);
+    event CastVote(address _from, uint _to, uint voteWeight);
+    event RevokedVote(address _from, uint _to, uint voteWeight);
 
     modifier isValidVoter() {
         require(canVote(msg.sender), "Not a valid voter");
@@ -43,7 +43,7 @@ contract BasePoll /*is IPoll */{
         protocolAddresses = _protocolAddresses;
         voterBaseLogic = ""; //initialize here
         pollName = ""; //initialize here
-        voterBaseLogic=""; //initialize here
+        pollType = "";
         for (uint8 i = 0; i < _proposalNames.length; i++) {
             proposals.push(Proposal({name: _proposalNames[i], voteCount: 0, voteWeight: 0}));
         }
@@ -76,10 +76,12 @@ contract BasePoll /*is IPoll */{
     function canVote(address _to) public view returns (bool) {
         //This is to be filled by user before deploying poll. Can't be modified after poll is deployed. Here is a sample.
         //You can also use attributes to set parameters here
-        IERC1261 contract1 = IERC1261(protocolAddresses[0]);
-        IERC1261 contract2 = IERC1261(protocolAddresses[1]);
-        IERC1261 contract3 = IERC1261(protocolAddresses[2]);
-        return contract1.isCurrentMember(_to) && contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India');
+        //IERC1261 contract1 = IERC1261(protocolAddresses[0]);
+        //IERC1261 contract2 = IERC1261(protocolAddresses[1]);
+        //IERC1261 contract3 = IERC1261(protocolAddresses[2]);
+        //&& contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India')
+        //return contract1.isCurrentMember(_to);
+        return true;
     }
 
     function getVoteTally(uint _proposalId) external view returns (uint) {

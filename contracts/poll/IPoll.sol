@@ -2,9 +2,9 @@ pragma solidity ^0.4.24;
 
 //Voterbase logic is hard coded and kept in the checkIfVoter function. The function takes input voterAddress and applies the necessary logic(custom implement) and returns a bool
 interface IPoll {
-    event TriedToVote(address indexed _from, uint indexed _to, uint voteWeight);
-    event CastVote(address indexed _from, uint indexed _to, uint voteWeight);
-    event RevokedVote(address indexed _from, uint indexed _to, uint voteWeight);
+    event TriedToVote(address _from, uint _to, uint voteWeight);
+    event CastVote(address _from, uint _to, uint voteWeight);
+    event RevokedVote(address _from, uint _to, uint voteWeight);
 
     //gets the name of the poll e.g.: "Admin Election for Autumn 2018"
     function getName() external view returns (bytes32);
