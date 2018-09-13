@@ -13,8 +13,8 @@ contract TokenProportionalCapped is BasePoll {
     uint public capPercent;
     uint public capWeight;
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent) 
-    public BasePoll(_protocolAddresses, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, string _voterBaseLogic, string _pollName, string _pollType) 
+        public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType) {
         token = IFreezableToken(_tokenAddress);
         capPercent = _capPercent;
         capWeight = SafeMath.mul(_capPercent, token.totalSupply());

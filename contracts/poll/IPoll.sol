@@ -7,11 +7,11 @@ interface IPoll {
     event RevokedVote(address _from, uint _to, uint voteWeight);
 
     //gets the name of the poll e.g.: "Admin Election for Autumn 2018"
-    function getName() external view returns (bytes32);
+    function getName() external view returns (string);
     //gets Poll Type : Token (WAN) weighted poll
-    function getPollType() external view returns (bytes32);
+    function getPollType() external view returns (string);
     //gets voterbaselogic : "WanChain | US & China | Developers". Use this and protocolAddresses to fill in hover over.
-    function getVoterBaseLogic() external view returns (bytes32);
+    function getVoterBaseLogic() external view returns (string);
     //returns the protocol addresses e.g.: address for Wanchain, Us & China etc.
     function getProtocolAddresses() external view returns (address[]);
     //returns the proposal names

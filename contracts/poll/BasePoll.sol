@@ -4,7 +4,7 @@ import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 import "./IPoll.sol";
 
 
-contract BasePoll /*is IPoll */{
+contract BasePoll is IPoll {
     struct Proposal {
         uint voteCount;
         uint voteWeight;
@@ -37,13 +37,13 @@ contract BasePoll /*is IPoll */{
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames) public {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, string _voterBaseLogic, string _pollName, string _pollType) public {
         //Make sure _proposalNames length < 32
         require(_proposalNames.length <= 32, "Proposals must be less than 32");
         protocolAddresses = _protocolAddresses;
-        voterBaseLogic = ""; //initialize here
-        pollName = ""; //initialize here
-        pollType = "";
+        voterBaseLogic = _voterBaseLogic;
+        pollName = _pollName;
+        pollType = _pollType;
         for (uint8 i = 0; i < _proposalNames.length; i++) {
             proposals.push(Proposal({name: _proposalNames[i], voteCount: 0, voteWeight: 0}));
         }
@@ -71,17 +71,6 @@ contract BasePoll /*is IPoll */{
             proposalNames[index] = (proposals[index].name);
         }
         return proposalNames;
-    }
-
-    function canVote(address _to) public view returns (bool) {
-        //This is to be filled by user before deploying poll. Can't be modified after poll is deployed. Here is a sample.
-        //You can also use attributes to set parameters here
-        //IERC1261 contract1 = IERC1261(protocolAddresses[0]);
-        //IERC1261 contract2 = IERC1261(protocolAddresses[1]);
-        //IERC1261 contract3 = IERC1261(protocolAddresses[2]);
-        //&& contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India')
-        //return contract1.isCurrentMember(_to);
-        return true;
     }
 
     function getVoteTally(uint _proposalId) external view returns (uint) {
@@ -120,6 +109,16 @@ contract BasePoll /*is IPoll */{
         return winningProposalIndex;
     }
 
+    //This is to be filled by user before deploying poll. 
+    //User can't deploy a poll without implementing canVote function.
+    //Can't be modified after poll is deployed. Here is a sample.
+    //You can also use attributes to set parameters here
+    //IERC1261 contract1 = IERC1261(protocolAddresses[0]);
+    //IERC1261 contract2 = IERC1261(protocolAddresses[1]);
+    //IERC1261 contract3 = IERC1261(protocolAddresses[2]);
+    //&& contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India')
+    //return contract1.isCurrentMember(_to);
+    function canVote(address _to) public view returns (bool);
     function calculateVoteWeight(address _to) public view returns (uint);
     function vote(uint8 _proposalId) external;
     function revokeVote() external;

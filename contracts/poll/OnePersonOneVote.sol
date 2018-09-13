@@ -6,7 +6,8 @@ import "./BasePoll.sol";
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter
 contract OnePersonOneVote is BasePoll {
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames) public BasePoll(_protocolAddresses, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, string _voterBaseLogic, string _pollName, string _pollType) 
+        public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType) {
         
     }
     

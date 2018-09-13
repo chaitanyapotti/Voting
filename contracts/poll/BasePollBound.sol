@@ -14,8 +14,8 @@ contract BasePollBound is BasePoll {
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime) 
-        public BasePoll(_protocolAddresses, _proposalNames) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime, string _voterBaseLogic, string _pollName, string _pollType) 
+        public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType) {
         require(_startTime >= now && _endTime > _startTime);
         startTime = _startTime;
         endTime = _endTime;
