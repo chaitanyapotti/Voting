@@ -11,7 +11,7 @@ contract TokenProportionalUncapped is BasePoll {
 
     IFreezableToken public token;
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, string _voterBaseLogic, string _pollName, string _pollType) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
         public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType) {
         token = IFreezableToken(_tokenAddress);
     }
@@ -39,7 +39,7 @@ contract TokenProportionalUncapped is BasePoll {
     function revokeVote() external isValidVoter {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
-        uint votedProposal = sender.vote;
+        uint8 votedProposal = sender.vote;
         uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;

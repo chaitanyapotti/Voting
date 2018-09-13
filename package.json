@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "electusprotocol": "^1.0.3"
+    "electusprotocol": "^1.0.4"
   }
 }

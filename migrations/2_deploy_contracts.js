@@ -1,10 +1,7 @@
-var onePersonOneVote = artifacts.require(
-  "../test/contracts/OnePersonOneVote.sol"
+var OnePersonOneVoteTest = artifacts.require(
+  "../contracts/testContracts/OnePersonOneVoteTest.sol"
 );
 var electusProtocol = artifacts.require("../contracts/protocol/protocol.sol");
-var electusProtocolMetaData = artifacts.require(
-  "../node_modules/electusprotocol/contracts/ERC1261MetaData.sol"
-);
 module.exports = function(deployer, network, accounts) {
   // let instance1;
   // let instance2;
@@ -42,28 +39,13 @@ module.exports = function(deployer, network, accounts) {
   //   console.log(instance1, "ins1");
   // });
   // deployer.deploy(
-  //   onePersonOneVote,
+  //   OnePersonOneVoteTest,
   //   [instance1, instance2, instance3],
-  //   [
-  //     "0x68656c6c6f0000000000000000000000",
-  //     "0x776f726c640000000000000000000000"
-  //   ],
-  //   "Wanchain",
-  //   "Admin Election For 2018",
-  //   "One Person One Vote"
+  //   ["0x68656c6c6f", "0x776f726c64"],
+  //   "0x57616e636861696e",
+  //   "0x41646d696e20456c656374696f6e20466f722032303138",
+  //   "0x4f6e6520506572736f6e204f6e6520566f7465"
   // );
-  deployer.deploy(
-    onePersonOneVote,
-    ["0x1c3b7db8327e7683697363e88ebe14186d6c9f72", "0xd3a7f6246e51eb0f76f08f3770ba0cca000e9781", "0x9403ec4c3587a7ae55279374b7325051a818c705"],
-    [
-      "0x68656c6c6f0000000000000000000000",
-      "0x776f726c640000000000000000000000"
-    ],
-    "Wanchain",
-    "Admin Election For 2018",
-    "One Person One Vote"
-  );
-
   // .then(protocol2 => {
   //   instance3 = protocol2.address;
   //   protocol2.assignTo(accounts[3], [0], {
@@ -90,9 +72,7 @@ module.exports = function(deployer, network, accounts) {
   // .then(deployer.deploy(electusProtocol, "chain", "WAN").then(protocol2 => {
   //   instance3 = protocol2.address;
   // })).then(deployer.deploy(onePersonOneVote, [instance1, instance2]));
-
   // deployer.link(electusProtocol, electusProtocolMetaData);
   // deployer.deploy(electusProtocolMetaData);
-
   //deployer.deploy(onePersonOneVote, [], []);
 };

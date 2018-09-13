@@ -2,16 +2,16 @@ pragma solidity ^0.4.24;
 
 //Voterbase logic is hard coded and kept in the checkIfVoter function. The function takes input voterAddress and applies the necessary logic(custom implement) and returns a bool
 interface IPoll {
-    event TriedToVote(address _from, uint _to, uint voteWeight);
-    event CastVote(address _from, uint _to, uint voteWeight);
-    event RevokedVote(address _from, uint _to, uint voteWeight);
+    event TriedToVote(address _from, uint8 _to, uint voteWeight);
+    event CastVote(address _from, uint8 _to, uint voteWeight);
+    event RevokedVote(address _from, uint8 _to, uint voteWeight);
 
     //gets the name of the poll e.g.: "Admin Election for Autumn 2018"
-    function getName() external view returns (string);
+    function getName() external view returns (bytes32);
     //gets Poll Type : Token (WAN) weighted poll
-    function getPollType() external view returns (string);
+    function getPollType() external view returns (bytes32);
     //gets voterbaselogic : "WanChain | US & China | Developers". Use this and protocolAddresses to fill in hover over.
-    function getVoterBaseLogic() external view returns (string);
+    function getVoterBaseLogic() external view returns (bytes32);
     //returns the protocol addresses e.g.: address for Wanchain, Us & China etc.
     function getProtocolAddresses() external view returns (address[]);
     //returns the proposal names

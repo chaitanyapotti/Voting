@@ -19,25 +19,25 @@ contract BasePoll is IPoll {
         //uint timeStamp;
     }
 
-    string public pollName;
-    string public pollType;
-    string public voterBaseLogic;
+    bytes32 public pollName;
+    bytes32 public pollType;
+    bytes32 public voterBaseLogic;
 
     Proposal[] public proposals;
     address[] public protocolAddresses;
 
     mapping(address => Voter) public voters;
 
-    event TriedToVote(address _from, uint _to, uint voteWeight);
-    event CastVote(address _from, uint _to, uint voteWeight);
-    event RevokedVote(address _from, uint _to, uint voteWeight);
+    event TriedToVote(address _from, uint8 _to, uint voteWeight);
+    event CastVote(address _from, uint8 _to, uint voteWeight);
+    event RevokedVote(address _from, uint8 _to, uint voteWeight);
 
     modifier isValidVoter() {
         require(canVote(msg.sender), "Not a valid voter");
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, string _voterBaseLogic, string _pollName, string _pollType) public {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) public {
         //Make sure _proposalNames length < 32
         require(_proposalNames.length <= 32, "Proposals must be less than 32");
         protocolAddresses = _protocolAddresses;
@@ -49,15 +49,15 @@ contract BasePoll is IPoll {
         }
     }
 
-    function getName() external view returns (string) {
+    function getName() external view returns (bytes32) {
         return pollName;
     }
 
-    function getPollType() external view returns (string) {
+    function getPollType() external view returns (bytes32) {
         return pollType;
     }
 
-    function getVoterBaseLogic() external view returns (string) {
+    function getVoterBaseLogic() external view returns (bytes32) {
         return voterBaseLogic;
     }
 

@@ -11,7 +11,7 @@ contract TokenProportionalCappedBound is BasePollBound {
     uint public capPercent;
     uint public capWeight;
 
-    constructor(address[] _protocolAddresses, address _tokenAddress, bytes32[] _proposalNames, uint8 _capPercent, uint _startTime, uint _endTime, string _voterBaseLogic, string _pollName, string _pollType) 
+    constructor(address[] _protocolAddresses, address _tokenAddress, bytes32[] _proposalNames, uint8 _capPercent, uint _startTime, uint _endTime, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
         public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime, _voterBaseLogic, _pollName, _pollType) {
         token = IFreezableToken(_tokenAddress);
         capPercent = _capPercent;
@@ -44,7 +44,7 @@ contract TokenProportionalCappedBound is BasePollBound {
     function revokeVote() external isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
-        uint votedProposal = sender.vote;
+        uint8 votedProposal = sender.vote;
         uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;

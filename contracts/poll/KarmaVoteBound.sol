@@ -9,7 +9,7 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract KarmaVoteBound is BasePollBound {
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime, string _voterBaseLogic, string _pollName, string _pollType) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
         public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime, _voterBaseLogic, _pollName, _pollType) {
     }
 
@@ -36,7 +36,7 @@ contract KarmaVoteBound is BasePollBound {
     function revokeVote() external isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
-        uint votedProposal = sender.vote;
+        uint8 votedProposal = sender.vote;
         uint voteWeight = sender.weight;
         sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
