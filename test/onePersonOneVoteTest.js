@@ -17,7 +17,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
         }
       );
       // console.log(protocol1Contract);
-      // console.log("11112");
+      console.log("11112");
       const txResult = await protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
