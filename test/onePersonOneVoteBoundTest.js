@@ -11,7 +11,9 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol1Contract = await ElectusProtocol.new("Wanchain", "WAN", {
         gas: 3000000
       });
-
+      await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       await protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
@@ -19,7 +21,9 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol2Contract = await ElectusProtocol.new("US & China", "UC", {
         gas: 3000000
       });
-
+      await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       await protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
@@ -27,12 +31,12 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol3Contract = await ElectusProtocol.new("Developers", "DEV", {
         gas: 3000000
       });
-      await protocol3Contract.assignTo(accounts[1], [0], {
-        from: accounts[0]
-      });
       await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
+      await protocol3Contract.assignTo(accounts[1], [0], {
+        from: accounts[0]
+      });
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteBoundTest.new(
         [
@@ -61,7 +65,9 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol1Contract = await ElectusProtocol.new("Wanchain", "WAN", {
         gas: 3000000
       });
-
+      await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
@@ -69,7 +75,9 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol2Contract = await ElectusProtocol.new("US & China", "UC", {
         gas: 3000000
       });
-
+      await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
@@ -77,6 +85,9 @@ contract("one Person One Vote Bound Test", function(accounts) {
       protocol3Contract = await ElectusProtocol.new("Developers", "DEV", {
         gas: 3000000
       });
+      await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });

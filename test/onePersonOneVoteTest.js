@@ -7,21 +7,20 @@ const truffleAssert = require("truffle-assertions");
 contract("OnePersonOneVoteTest", function(accounts) {
   context("poll hasn't started or ended", () => {
     beforeEach("setup", async () => {
-      // console.log("1111");
-      const protocol1Contract = await electusProtocol.new(
-        "0x57616e636861696e",
-        "0x57414e",
+      protocol1Contract = await electusProtocol.new(
+        web3.fromAscii("Wanchain"),
+        web3.fromAscii("WAN"),
         {
           from: accounts[0],
           gas: 3000000
         }
       );
-      // console.log(protocol1Contract);
-      // console.log("11112");
-      const txResult = await protocol1Contract.assignTo(accounts[1], [0], {
+      await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
+      await protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      console.log(txResult);
       protocol2Contract = await electusProtocol.new(
         "0x55532026204368696e61",
         "0x5543",
@@ -29,11 +28,12 @@ contract("OnePersonOneVoteTest", function(accounts) {
           gas: 3000000
         }
       );
-      console.log("11114");
+      await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       await protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      console.log("11115");
       protocol3Contract = await electusProtocol.new(
         "0x55532026204368696e61",
         "0x5543",
@@ -41,15 +41,15 @@ contract("OnePersonOneVoteTest", function(accounts) {
           gas: 3000000
         }
       );
-      console.log("11116");
-      await protocol3Contract.assignTo(accounts[1], [0], {
-        from: accounts[0]
-      });
-      console.log("11117");
       await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
-      console.log("1118");
+      await protocol3Contract.assignTo(accounts[1], [0], {
+        from: accounts[0]
+      });
+      await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
@@ -64,7 +64,6 @@ contract("OnePersonOneVoteTest", function(accounts) {
         presentTime + 11,
         0
       );
-      console.log("222");
     });
     it("tries to vote : but poll hasn't started yet", async () => {
       try {
@@ -83,7 +82,9 @@ contract("OnePersonOneVoteTest", function(accounts) {
           gas: 3000000
         }
       );
-      console.log("ppp");
+      await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
@@ -94,10 +95,12 @@ contract("OnePersonOneVoteTest", function(accounts) {
           gas: 3000000
         }
       );
+      await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      console.log("yes");
       protocol3Contract = await electusProtocol.new(
         "0x55532026204368696e61",
         "0x5543",
@@ -105,7 +108,9 @@ contract("OnePersonOneVoteTest", function(accounts) {
           gas: 3000000
         }
       );
-      console.log("no");
+      await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
+        web3.fromAscii("black")
+      ]);
       protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
