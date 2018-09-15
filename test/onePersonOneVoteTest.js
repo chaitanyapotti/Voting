@@ -1,43 +1,55 @@
-var OnePersonOneVoteTest = artifacts.require(
-  "../contracts/testContracts/OnePersonOneVoteTest.sol"
-);
+var OnePersonOneVoteTest = artifacts.require("./OnePersonOneVoteTest.sol");
 
-var electusProtocol = artifacts.require("../contracts/protocol/protocol.sol");
+var electusProtocol = artifacts.require("./Protocol.sol");
 
 const truffleAssert = require("truffle-assertions");
 
 contract("OnePersonOneVoteTest", function(accounts) {
-  context("poll hasn't started or ended", ()=>{
+  context("poll hasn't started or ended", () => {
     beforeEach("setup", async () => {
-      console.log("1111")
-      protocol1Contract = await electusProtocol.new("0x57616e636861696e", "0x57414e", {
-        gas: 3000000
-      });
-      console.log("11112")
-      protocol1Contract.assignTo(accounts[1], [0], {
+      // console.log("1111");
+      const protocol1Contract = await electusProtocol.new(
+        "0x57616e636861696e",
+        "0x57414e",
+        {
+          from: accounts[0],
+          gas: 3000000
+        }
+      );
+      // console.log(protocol1Contract);
+      // console.log("11112");
+      const txResult = await protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      console.log("11113")
-      protocol2Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
-        gas: 3000000
-      });
-      console.log("11114")
-      protocol2Contract.assignTo(accounts[2], [0], {
+      console.log(txResult);
+      protocol2Contract = await electusProtocol.new(
+        "0x55532026204368696e61",
+        "0x5543",
+        {
+          gas: 3000000
+        }
+      );
+      console.log("11114");
+      await protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      console.log("11115")
-      protocol3Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
-        gas: 3000000
-      });
-      console.log("11116")
-      protocol3Contract.assignTo(accounts[1], [0], {
+      console.log("11115");
+      protocol3Contract = await electusProtocol.new(
+        "0x55532026204368696e61",
+        "0x5543",
+        {
+          gas: 3000000
+        }
+      );
+      console.log("11116");
+      await protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      console.log("11117")
-      protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
+      console.log("11117");
+      await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
-      console.log("1118")
+      console.log("1118");
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
@@ -49,40 +61,51 @@ contract("OnePersonOneVoteTest", function(accounts) {
         "0x57616e636861696e",
         "0x41646d696e20456c656374696f6e20466f722032303138",
         "0x4f6e6520506572736f6e204f6e6520566f7465",
-        presentTime+11,
+        presentTime + 11,
         0
       );
-      console.log("222")
+      console.log("222");
     });
     it("tries to vote : but poll hasn't started yet", async () => {
-      try{
+      try {
         await pollContract.vote(1, { from: accounts[1] });
-      }
-      catch(error){
-        assert.exists(error)
+      } catch (error) {
+        assert.exists(error);
       }
     });
   });
-  context ("poll has started", ()=>{
+  context("poll has started", () => {
     beforeEach("setup", async () => {
-      protocol1Contract = await electusProtocol.new("0x57616e636861696e", "0x57414e", {
-        gas: 3000000
-      });
-      console.log('ppp')
+      protocol1Contract = await electusProtocol.new(
+        "0x57616e636861696e",
+        "0x57414e",
+        {
+          gas: 3000000
+        }
+      );
+      console.log("ppp");
       protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      protocol2Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
-        gas: 3000000
-      });
+      protocol2Contract = await electusProtocol.new(
+        "0x55532026204368696e61",
+        "0x5543",
+        {
+          gas: 3000000
+        }
+      );
       protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      console.log("yes")
-      protocol3Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
-        gas: 3000000
-      });
-      console.log("no")
+      console.log("yes");
+      protocol3Contract = await electusProtocol.new(
+        "0x55532026204368696e61",
+        "0x5543",
+        {
+          gas: 3000000
+        }
+      );
+      console.log("no");
       protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
@@ -100,7 +123,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
         "0x57616e636861696e",
         "0x41646d696e20456c656374696f6e20466f722032303138",
         "0x4f6e6520506572736f6e204f6e6520566f7465",
-        presentTime+0.5,
+        presentTime + 0.5,
         0
       );
     });
@@ -162,5 +185,5 @@ contract("OnePersonOneVoteTest", function(accounts) {
         assert.exists(error);
       }
     });
-  })
-})
+  });
+});
