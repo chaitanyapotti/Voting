@@ -26,7 +26,7 @@ contract TokenProportionalCapped is BasePoll {
         return currentWeight > capWeight ? capWeight : currentWeight;
     }
 
-    function vote(uint8 _proposal) external {
+    function vote(uint8 _proposal) external isPollStarted {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
         //vote weight is multiplied by 100 to account for decimals

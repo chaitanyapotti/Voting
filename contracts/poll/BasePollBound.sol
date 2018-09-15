@@ -7,7 +7,7 @@ import "./BasePoll.sol";
 contract BasePollBound is BasePoll {
 
     modifier checkTime() {
-        require(hasPollStarted(), "Poll hasn't started or has ended");
+        require(isPollValid(), "Poll hasn't started or has ended");
         _;
     }
 
@@ -15,7 +15,7 @@ contract BasePollBound is BasePoll {
         public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
     }
 
-    function hasPollStarted() public view returns (bool) {
+     function isPollValid() public view returns (bool) {
         return (now >= startTime && now <= endTime);
     }
 
