@@ -1,13 +1,13 @@
 pragma solidity ^0.4.24;
 
-import "../poll/OnePersonOneVote.sol";
+import "../poll/DelegatedVote.sol";
 import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 
 
-contract OnePersonOneVoteTest is OnePersonOneVote {
+contract DelegatedVoteTest is DelegatedVote {
     
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _endTime) 
-        public OnePersonOneVote(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _endTime) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
+        public DelegatedVote(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType) {
         
     }
 
