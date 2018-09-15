@@ -1,7 +1,7 @@
 OnePersonOneVoteBoundTest = artifacts.require(
   "./OnePersonOneVoteBoundTest.sol"
 );
-ElectusProtocol = artifacts.require("./protocol.sol");
+ElectusProtocol = artifacts.require("./Protocol.sol");
 
 const truffleAssert = require("truffle-assertions");
 
