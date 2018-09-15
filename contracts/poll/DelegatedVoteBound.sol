@@ -9,8 +9,8 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract DelegatedVoteBound is BasePollBound {
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _endTime, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
-        public BasePollBound(_protocolAddresses, _proposalNames, _startTime, _endTime, _voterBaseLogic, _pollName, _pollType) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, uint _startTime, uint _duration, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
+        public BasePollBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
     }
 
     function calculateVoteWeight(address _to) public view returns (uint) {
@@ -23,7 +23,7 @@ contract DelegatedVoteBound is BasePollBound {
     function vote(uint8 _proposal) external checkTime {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        emit TriedToVote(msg.sender, _proposal, voteWeight);
+        
         if(canVote(msg.sender) && !sender.voted && sender.delegate == address(0)){
             sender.weight = voteWeight;
             sender.voted = true;
@@ -31,6 +31,9 @@ contract DelegatedVoteBound is BasePollBound {
             proposals[_proposal].voteWeight += sender.weight;
             proposals[_proposal].voteCount += 1;
             emit CastVote(msg.sender, _proposal, voteWeight);
+        }
+        else {
+            emit TriedToVote(msg.sender, _proposal, voteWeight);
         }
     }
 

@@ -22,6 +22,8 @@ contract BasePoll is IPoll {
     bytes32 public pollName;
     bytes32 public pollType;
     bytes32 public voterBaseLogic;
+    uint public startTime;
+    uint public endTime;
 
     Proposal[] public proposals;
     address[] public protocolAddresses;
@@ -37,13 +39,16 @@ contract BasePoll is IPoll {
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) public {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public {
         //Make sure _proposalNames length < 32
         require(_proposalNames.length <= 32, "Proposals must be less than 32");
         protocolAddresses = _protocolAddresses;
         voterBaseLogic = _voterBaseLogic;
         pollName = _pollName;
         pollType = _pollType;
+        startTime = _startTime;
+        endTime = _startTime + _duration;
+        require(_startTime >= now && startTime <= endTime, "Invalid Times");
         for (uint8 i = 0; i < _proposalNames.length; i++) {
             proposals.push(Proposal({name: _proposalNames[i], voteCount: 0, voteWeight: 0}));
         }
@@ -63,6 +68,14 @@ contract BasePoll is IPoll {
 
     function getProtocolAddresses() external view returns (address[]) {
         return protocolAddresses;
+    }
+
+    function getStartTime() external view returns (uint) {
+        return startTime;
+    }
+
+    function getEndTime() external view returns (uint) {
+        return endTime;
     }
 
     function getProposals() external view returns (bytes32[]) {
