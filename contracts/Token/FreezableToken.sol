@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "./ERC20Token.sol";
-import "../Ownership/Authorizable.sol";
+import "../ownership/Authorizable.sol";
 import "./IFreezableToken.sol";
 
 

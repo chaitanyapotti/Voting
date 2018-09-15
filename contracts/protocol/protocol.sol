@@ -4,8 +4,6 @@ import "electusprotocol/contracts/ERC1261MetaData.sol";
 
 
 contract Protocol is ERC1261MetaData {
-    constructor(string _orgName, string _orgSymbol) public {
-        orgName = _orgName;
-        orgSymbol = _orgSymbol;
+    constructor(bytes32 _orgName, bytes32 _orgSymbol) public ERC1261MetaData(_orgName, _orgSymbol) {
     }
 }
