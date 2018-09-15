@@ -20,13 +20,8 @@ contract OnePersonOneVoteBound is BasePollBound {
     function vote(uint8 _proposal) external checkTime {
        Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-<<<<<<< HEAD
         
         if(canVote(msg.sender) && !sender.voted) {
-=======
-        emit TriedToVote(msg.sender, _proposal, voteWeight);
-        if(canVote(msg.sender) && !sender.voted && _proposal<proposals.length) {
->>>>>>> 4759104c62d20cd7a5df7f55360c012a0216b73a
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
