@@ -22,7 +22,7 @@ contract DelegatedVote is BasePoll {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
         emit TriedToVote(msg.sender, _proposal, voteWeight);
-        if(canVote(msg.sender) && !sender.voted && sender.delegate == address(0)){
+        if(canVote(msg.sender) && !sender.voted && sender.delegate == address(0) && _proposal<proposals.length){
             sender.weight = voteWeight;
             sender.voted = true;
             sender.vote = _proposal;

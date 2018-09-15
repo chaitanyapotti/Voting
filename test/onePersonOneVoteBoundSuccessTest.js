@@ -44,7 +44,6 @@ contract("one Person One Vote Bound Success Test", function(accounts){
             "0x41646d696e20456c656374696f6e20466f722032303138",
             "0x4f6e6520506572736f6e204f6e6520566f7465"
           );
-          console.log("presentTime")
     })
     it("calculate vote weight : is a member", async () => {
       voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
@@ -94,14 +93,14 @@ contract("one Person One Vote Bound Success Test", function(accounts){
     });
     it("revoke vote: is a member & not voted", async () => {
       try {
-        revokeResult = await pollContract.revokeVote({ from: accounts[1] });
+        await pollContract.revokeVote({ from: accounts[1] });
       } catch (error) {
         assert.exists(error);
       }
     });
     it("revoke vote: not a member", async () => {
       try {
-        revokeResult = await pollContract.revokeVote({ from: accounts[3] });
+        await pollContract.revokeVote({ from: accounts[3] });
       } catch (error) {
         assert.exists(error);
       }
