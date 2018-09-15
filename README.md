@@ -1,5 +1,7 @@
 # Voting
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/chaitanyapotti/Voting.svg)](https://greenkeeper.io/)
+
 Actions takes action against poll results.
 Actions contain minAcceptQuorumPerct
 actions check if poll has ended or not to execute result
