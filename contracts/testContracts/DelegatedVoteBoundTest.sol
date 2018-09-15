@@ -6,8 +6,8 @@ import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 
 contract DelegatedVoteBoundTest is DelegatedVoteBound {
     
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames,uint _startTime, uint _endTime, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
-        public DelegatedVoteBound(_protocolAddresses, _proposalNames, _startTime, _endTime, _voterBaseLogic, _pollName, _pollType) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames,uint _startTime, uint _duration, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType) 
+        public DelegatedVoteBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
         
     }
 
