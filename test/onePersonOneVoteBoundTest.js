@@ -1,14 +1,14 @@
 OnePersonOneVoteBoundTest = artifacts.require(
-  "../contracts/testContracts/OnePersonOneVoteBoundTest.sol"
+  "./OnePersonOneVoteBoundTest.sol"
 );
-ElectusProtocol = artifacts.require("../contracts/protocol/protocol.sol");
+ElectusProtocol = artifacts.require("./protocol.sol");
 
 const truffleAssert = require("truffle-assertions");
 
 contract("one Person One Vote Bound Test", function(accounts) {
   context("poll hasn't started or ended", () => {
     beforeEach("setup", async () => {
-      protocol1Contract = await ElectusProtocol.new("Wanchain", "WAN", {
+      protocol1Contract = await ElectusProtocol.new(web3.fromAscii("Wanchain"),web3.fromAscii( "WAN"), {
         gas: 3000000
       });
       await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
@@ -18,7 +18,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
         from: accounts[0]
       });
 
-      protocol2Contract = await ElectusProtocol.new("US & China", "UC", {
+      protocol2Contract = await ElectusProtocol.new(web3.fromAscii("US & China"), web3.fromAscii("UC"), {
         gas: 3000000
       });
       await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
@@ -28,7 +28,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
         from: accounts[0]
       });
 
-      protocol3Contract = await ElectusProtocol.new("Developers", "DEV", {
+      protocol3Contract = await ElectusProtocol.new(web3.fromAscii("Developers"), web3.fromAscii("DEV"), {
         gas: 3000000
       });
       await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
@@ -62,7 +62,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
   });
   context("poll has started", () => {
     beforeEach("setup", async () => {
-      protocol1Contract = await ElectusProtocol.new("Wanchain", "WAN", {
+      protocol1Contract = await ElectusProtocol.new(web3.fromAscii("Wanchain"), web3.fromAscii("WAN"), {
         gas: 3000000
       });
       await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
@@ -72,7 +72,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
         from: accounts[0]
       });
 
-      protocol2Contract = await ElectusProtocol.new("US & China", "UC", {
+      protocol2Contract = await ElectusProtocol.new(web3.fromAscii("US & China"),web3.fromAscii("UC"), {
         gas: 3000000
       });
       await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
@@ -82,7 +82,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
         from: accounts[0]
       });
 
-      protocol3Contract = await ElectusProtocol.new("Developers", "DEV", {
+      protocol3Contract = await ElectusProtocol.new(web3.fromAscii("Developers"),web3.fromAscii("DEV"), {
         gas: 3000000
       });
       await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
