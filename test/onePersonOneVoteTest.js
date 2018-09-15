@@ -47,9 +47,6 @@ contract("OnePersonOneVoteTest", function(accounts) {
       await protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
-        web3.fromAscii("black")
-      ]);
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
@@ -85,7 +82,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
       await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
-      protocol1Contract.assignTo(accounts[1], [0], {
+      await protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
       protocol2Contract = await electusProtocol.new(
@@ -98,7 +95,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
       await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
-      protocol2Contract.assignTo(accounts[2], [0], {
+      await protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
       protocol3Contract = await electusProtocol.new(
@@ -111,12 +108,9 @@ contract("OnePersonOneVoteTest", function(accounts) {
       await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
-      protocol3Contract.assignTo(accounts[1], [0], {
+      await protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
-        web3.fromAscii("black")
-      ]);
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
@@ -128,7 +122,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
         "0x57616e636861696e",
         "0x41646d696e20456c656374696f6e20466f722032303138",
         "0x4f6e6520506572736f6e204f6e6520566f7465",
-        presentTime+0.5,
+        presentTime + 0.5,
         0
       );
     });
