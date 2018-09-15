@@ -151,7 +151,7 @@ contract("one Person One Vote Bound Test", function(accounts) {
       truffleAssert.eventNotEmitted(result, "CastVote");
     });
     it("cast vote: not a member", async () => {
-      result = await pollContract.vote(2, { from: accounts[3] });
+      result = await pollContract.vote(1, { from: accounts[2] });
       assert.equal(await pollContract.getVoteTally(1), 0);
       assert.equal(await pollContract.getVoteTally(0), 0);
       truffleAssert.eventEmitted(result, "TriedToVote");
