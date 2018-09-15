@@ -128,7 +128,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
         "0x57616e636861696e",
         "0x41646d696e20456c656374696f6e20466f722032303138",
         "0x4f6e6520506572736f6e204f6e6520566f7465",
-        presentTime + 0.5,
+        presentTime+0.5,
         0
       );
     });
