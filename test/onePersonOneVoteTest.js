@@ -29,7 +29,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
     protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")
     ]);
-
+    var presentTime = new Date().getTime() / 1000;
     pollContract = await OnePersonOneVoteTest.new(
       [
         protocol1Contract.address,
@@ -39,7 +39,9 @@ contract("OnePersonOneVoteTest", function(accounts) {
       ["0x68656c6c6f", "0x776f726c64"],
       "0x57616e636861696e",
       "0x41646d696e20456c656374696f6e20466f722032303138",
-      "0x4f6e6520506572736f6e204f6e6520566f7465"
+      "0x4f6e6520506572736f6e204f6e6520566f7465",
+      presentTime+2,
+      1000
     );
   });
   it("calculate vote weight : is a member", async () => {
@@ -53,7 +55,6 @@ contract("OnePersonOneVoteTest", function(accounts) {
   it("cast vote: is a member", async () => {
     result = await pollContract.vote(1, { from: accounts[1] });
     assert.equal(await pollContract.getVoteTally(1), 1);
-    truffleAssert.eventEmitted(result, "TriedToVote");
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member but gives wrong proposal", async () => {
@@ -74,7 +75,6 @@ contract("OnePersonOneVoteTest", function(accounts) {
     result = await pollContract.vote(1, { from: accounts[1] });
     assert.equal(await pollContract.getVoteTally(1), 1);
     result1 = await pollContract.vote(1, { from: accounts[1] });
-    truffleAssert.eventEmitted(result, "TriedToVote");
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventEmitted(result1, "TriedToVote");
     truffleAssert.eventNotEmitted(result1, "CastVote");

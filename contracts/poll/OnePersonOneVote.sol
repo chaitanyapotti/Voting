@@ -19,7 +19,7 @@ contract OnePersonOneVote is BasePoll {
         Voter storage sender = voters[msg.sender]; 
         uint voteWeight = calculateVoteWeight(msg.sender);
         
-        if(canVote(msg.sender) && !sender.voted) {
+        if(canVote(msg.sender) && !sender.voted && _proposal<proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
