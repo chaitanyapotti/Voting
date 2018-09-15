@@ -23,24 +23,54 @@ interface IPoll {
     /// @param voteWeight the weight of his vote
     event RevokedVote(address indexed _from, uint8 _to, uint voteWeight);
 
-    //returns the proposal names
+    /// @notice gets the proposal names
+    /// @dev limit the proposal count to 32 (for practical reasons), loop and generate the proposal list
+    /// @return the list of names of proposals
     function getProposals() external view returns (bytes32[]);
-    //returns whether the user can vote
+
+    /// @notice returns a boolean specifying whether the user can vote
+    /// @dev implement logic to enable checks to determine whether the user can vote
+    ///  if using eip-1261, use protocol addresses and interface (IERC1261) to enable checking with attributes
+    /// @param _to the person who can vote/not
+    /// @return a boolean as to whether the user can vote
     function canVote(address _to) external view returns (bool);
-    //gets the vote weight against the proposalid
+    
+    /// @notice gets the vote weight of the proposalId
+    /// @dev returns the current cumulative vote weight of a proposal
+    /// @param _proposalId the index of the proposal in the proposals array 
+    /// @return the cumulative vote weight of the specified proposal
     function getVoteTally(uint _proposalId) external view returns (uint);
    
-    //gets the vote count against the proposalid
+    /// @notice gets the no. of voters who voted for the proposal
+    /// @dev use a struct to keep a track of voteWeights and voterCount
+    /// @param _proposalId the index of the proposal in the proposals array 
+    /// @return the voter count of the people who voted for the specified proposal
     function getVoterCount(uint _proposalId) external view returns (uint);
     
+    /// @notice calculates the vote weight associated with the person `_to`
+    /// @dev use appropriate logic to determine the vote weight of the individual
+    ///  For sample implementations, refer to end of the eip
+    /// @param _to the person whose vote weight is being calculated
+    /// @return the vote weight of the individual
     function calculateVoteWeight(address _to) external view returns (uint);
-    //don't throw at all.. change state if canVote() .. else log
-
+    
+    /// @notice gets the leading proposal at the current time
+    /// @dev calculate the leading proposal at the current time
+    ///  For practical reasons, limit proposal count to 32.
+    /// @return the index of the proposal which is leading
     function winningProposal() external view returns (uint8);
 
+    /// @notice Handles the vote logic
+    /// @dev updates the appropriate data structures regarding the vote.
+    ///  stores the proposalId against the user to allow for unvote
+    /// @param _proposalId the index of the proposal in the proposals array
     function vote(uint8 _proposalId) external;
 
+    /// @notice Handles the unvote logic
+    /// @dev updates the appropriate data structures regarding the unvote
     function revokeVote() external;
+
+    //Optional parameters
 
     /// @notice gets the name of the poll e.g.: "Admin Election for Autumn 2018"
     /// @dev Set the name in the constructor of the poll
