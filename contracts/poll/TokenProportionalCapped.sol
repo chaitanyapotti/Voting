@@ -31,7 +31,7 @@ contract TokenProportionalCapped is BasePoll {
         uint voteWeight = calculateVoteWeight(msg.sender);
         //vote weight is multiplied by 100 to account for decimals
         
-        if(canVote(msg.sender) && !sender.voted) {
+        if(canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
