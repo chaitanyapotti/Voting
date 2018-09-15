@@ -15,7 +15,7 @@ contract OnePersonOneVote is BasePoll {
         return 1;
     }
 
-    function vote(uint8 _proposal) external {
+    function vote(uint8 _proposal) external isPollStarted {
         Voter storage sender = voters[msg.sender]; 
         uint voteWeight = calculateVoteWeight(msg.sender);
         

@@ -39,6 +39,11 @@ contract BasePoll is IPoll {
         _;
     }
 
+    modifier isPollStarted() {
+        require(hasPollStarted(), "Poll hasn't started");
+        _;
+    }
+
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public {
         //Make sure _proposalNames length < 32
         require(_proposalNames.length <= 32, "Proposals must be less than 32");
@@ -76,6 +81,10 @@ contract BasePoll is IPoll {
 
     function getEndTime() external view returns (uint) {
         return endTime;
+    }
+
+    function hasPollStarted() public view returns (bool) {
+        return (now >= startTime);
     }
 
     function getProposals() external view returns (bytes32[]) {
