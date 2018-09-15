@@ -21,5 +21,16 @@ module.exports = {
       port: 7545,
       network_id: "*"
     }
+  },
+  coverage: {
+    host: "localhost",
+    port: 8555, // <-- Use port 8555
+    gas: 0xfffffffffff, // <-- Use this high gas value
+    gasPrice: 0x01, // <-- Use this low gas price
+    network_id: "1999"
+  },
+  mocha: {
+    useColors: true,
+    enableTimeouts: false
   }
 };

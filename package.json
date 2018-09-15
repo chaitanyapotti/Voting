@@ -4,8 +4,16 @@
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
-    "test": "truffle test"
+    "start:blockchain:client": "bash ./scripts/start-blockchain.sh",
+    "stop:blockchain:client": "bash ./scripts/stop-blockchain.sh",
+    "test": "npm run start:blockchain:client & truffle migrate --reset --compile-all && truffle test --network development",
+    "post-test": "npm run stop:blockchain:client",
+    "coverage": "touch allFiredEvents & ./node_modules/.bin/solidity-coverage"
   },
+  "files": [
+    "contracts",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chaitanyapotti/Voting.git"
@@ -29,5 +37,9 @@
   "dependencies": {
     "electusprotocol": "^1.0.5",
     "truffle-assertions": "^0.4.0"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "solidity-coverage": "^0.5.11"
   }
 }

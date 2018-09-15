@@ -9,27 +9,35 @@ const truffleAssert = require("truffle-assertions");
 contract("OnePersonOneVoteTest", function(accounts) {
   context("poll hasn't started or ended", ()=>{
     beforeEach("setup", async () => {
-      protocol1Contract = await electusProtocol.new("Wanchain", "WAN", {
+      console.log("1111")
+      protocol1Contract = await electusProtocol.new("0x57616e636861696e", "0x57414e", {
         gas: 3000000
       });
+      console.log("11112")
       protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      protocol2Contract = await electusProtocol.new("US & China", "UC", {
+      console.log("11113")
+      protocol2Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
         gas: 3000000
       });
+      console.log("11114")
       protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      protocol3Contract = await electusProtocol.new("Developers", "DEV", {
+      console.log("11115")
+      protocol3Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
         gas: 3000000
       });
+      console.log("11116")
       protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
+      console.log("11117")
       protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
         web3.fromAscii("black")
       ]);
+      console.log("1118")
       var presentTime = new Date().getTime() / 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
@@ -44,6 +52,7 @@ contract("OnePersonOneVoteTest", function(accounts) {
         presentTime+11,
         0
       );
+      console.log("222")
     });
     it("tries to vote : but poll hasn't started yet", async () => {
       try{
@@ -56,21 +65,24 @@ contract("OnePersonOneVoteTest", function(accounts) {
   });
   context ("poll has started", ()=>{
     beforeEach("setup", async () => {
-      protocol1Contract = await electusProtocol.new("Wanchain", "WAN", {
+      protocol1Contract = await electusProtocol.new("0x57616e636861696e", "0x57414e", {
         gas: 3000000
       });
+      console.log('ppp')
       protocol1Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      protocol2Contract = await electusProtocol.new("US & China", "UC", {
+      protocol2Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
         gas: 3000000
       });
       protocol2Contract.assignTo(accounts[2], [0], {
         from: accounts[0]
       });
-      protocol3Contract = await electusProtocol.new("Developers", "DEV", {
+      console.log("yes")
+      protocol3Contract = await electusProtocol.new("0x55532026204368696e61", "0x5543", {
         gas: 3000000
       });
+      console.log("no")
       protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
