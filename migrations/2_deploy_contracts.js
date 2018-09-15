@@ -1,6 +1,7 @@
 var OnePersonOneVoteTest = artifacts.require(
   "../contracts/testContracts/OnePersonOneVoteTest.sol"
 );
+var DelegatedVoteTest = artifacts.require("../contracts/testContracts/DelegatedVoteTest.sol");
 var electusProtocol = artifacts.require("../contracts/protocol/protocol.sol");
 module.exports = function(deployer, network, accounts) {
   let instance1;
@@ -29,12 +30,12 @@ module.exports = function(deployer, network, accounts) {
       );
     })
     .then(function(instanceD) {
-      console.log(instance1.address);
-      console.log(instance2.address);
-      console.log(instance3.address);
-      instanceD.getPollType().then(function(returnValue) {
-        console.log(returnValue);
-        console.log(instanceD.address);
-      });
+      return DelegatedVoteTest.new(
+        [instance1.address, instance2.address, instance3.address],
+        ["0x68656c6c6f", "0x776f726c64"],
+        "0x57616e636861696e",
+        "0x41646d696e20456c656374696f6e20466f722032303138",
+        "0x4f6e6520506572736f6e204f6e6520566f7465"
+      );
     });
 };

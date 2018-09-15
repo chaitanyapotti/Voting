@@ -35,4 +35,38 @@ contract DelegatedVote is BasePoll {
     function revokeVote() external {
         revert("Can't revoke vote in delegated vote");
     }
+
+    function delegate(address _to) external isValidVoter {
+        Voter storage sender = voters[msg.sender];
+        require(!sender.voted, "You already voted.");
+        require(_to != msg.sender, "Self-delegation is disallowed.");
+        require(canVote(_to), "dont have enough rights");
+        // Forward the delegation as long as
+        // `to` also delegated.
+        // In general, such loops are very dangerous,
+        // because if they run too long, they might
+        // need more gas than is available in a block.
+        // In this case, the delegation will not be executed,
+        // but in other situations, such loops might
+        // cause a contract to get "stuck" completely.
+        while (voters[_to].delegate != address(0)) {
+            address to = voters[_to].delegate;
+
+            // We found a loop in the delegation, not allowed.
+            require(to != msg.sender, "Found loop in delegation.");
+        }
+
+        sender.voted = true;
+        Voter storage delegate_ = voters[_to];
+        if (delegate_.voted) {
+            // If the delegate already voted,
+            // directly add to the number of votes
+            proposals[delegate_.vote].voteWeight += calculateVoteWeight(msg.sender);
+        } else {
+            // If the delegate did not vote yet,
+            // add to her weight.
+            delegate_.weight = calculateVoteWeight(_to) + calculateVoteWeight(msg.sender);
+        }
+        sender.delegate = _to;
+    }
 }
