@@ -8,7 +8,7 @@ bc_client="ganache-cli"
 
 echo "Chosen client $bc_client"
 
-bc_client_port=8545
+bc_client_port=7545
 
 bc_client_running() {
   nc -z localhost "$bc_client_port"

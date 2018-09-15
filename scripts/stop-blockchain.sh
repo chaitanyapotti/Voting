@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pid=$(lsof -i:8545 -t); 
+pid=$(lsof -i:7545 -t); 
 
-echo "Killing blockchain client process $pid on port 8545"
+echo "Killing blockchain client process $pid on port 7545"
 kill -TERM $pid || kill -KILL $pid
