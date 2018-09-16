@@ -31,7 +31,7 @@ mkdir myproject && cd myproject
 truffle init
 ```
 
-## Installing Electus Protocol
+## Installing Voting Framework
 
 After installing either Framework, to install the Voting library, run the following in your Solidity project root directory:
 
