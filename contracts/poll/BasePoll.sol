@@ -30,9 +30,9 @@ contract BasePoll is IPoll {
 
     mapping(address => Voter) public voters;
 
-    event TriedToVote(address _from, uint8 _to, uint voteWeight);
-    event CastVote(address _from, uint8 _to, uint voteWeight);
-    event RevokedVote(address _from, uint8 _to, uint voteWeight);
+    event TriedToVote(address indexed _from, uint8 indexed _to, uint voteWeight);
+    event CastVote(address indexed _from, uint8 indexed _to, uint voteWeight);
+    event RevokedVote(address indexed _from, uint8 indexed _to, uint voteWeight);
 
     modifier isValidVoter() {
         require(canVote(msg.sender), "Not a valid voter");

@@ -9,13 +9,13 @@ interface IPoll {
     /// @param _from User who tried to vote
     /// @param _to the index of the proposal he voted to
     /// @param voteWeight the weight of his vote
-    event TriedToVote(address indexed _from, uint8 _to, uint voteWeight);
+    event TriedToVote(address indexed _from, uint8 indexed _to, uint voteWeight);
 
     /// @dev This emits when a person votes successfully
     /// @param _from User who successfully voted
     /// @param _to the index of the proposal he voted to
     /// @param voteWeight the weight of his vote
-    event CastVote(address indexed _from, uint8 _to, uint voteWeight);
+    event CastVote(address indexed _from, uint8 indexed _to, uint voteWeight);
 
     /// @dev This emits when a person revokes his vote
     /// @param _from User who successfully unvoted
@@ -107,7 +107,7 @@ interface IPoll {
     /// @return the list of vote weights against all proposals
     function getVoteTallies() external view returns (uint[]);
 
-    /// @notice gets the no. of people who voted against each proposal
+    /// @notice gets the no. of people who voted against all proposals
     /// @dev limit the proposal count to 32 (for practical reasons), loop and generate the vote count list
     /// @return the list of voter count against all proposals
     function getVoterCounts() external view returns (uint[]);

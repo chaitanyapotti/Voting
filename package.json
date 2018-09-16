@@ -1,5 +1,5 @@
 {
-  "name": "voting",
+  "name": "electusvoting",
   "version": "1.0.0",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
