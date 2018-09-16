@@ -139,7 +139,7 @@ contract("DelegatedVoteTest", function(accounts) {
     await pollContract.delegate(accounts[4], { from: accounts[3] });
     await pollContract.delegate(accounts[5], { from: accounts[4] });
     try {
-      await pollContract.delegate(accounts[5], { from: accounts[1] });
+      await pollContract.delegate(accounts[1], { from: accounts[5] });
     } catch (error) {
       assert.exists(error);
     }
@@ -182,6 +182,7 @@ contract("DelegatedVoteTest", function(accounts) {
     truffleAssert.eventNotEmitted(vote, "TriedToVote");
   });
   it("revoke vote reverts", async()=>{
+    await increaseTime(10000);
       try{
           await pollContract.revokeVote();
       }
