@@ -9,26 +9,35 @@ import "./IFreezableToken.sol";
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
 contract FreezableToken is ERC20Token, Authorizable, IFreezableToken {
-    mapping (address => bool) public frozenAccounts;
+    struct FreezablePolls{
+        uint currentPollsParticipating;
+        mapping(address => bool) pollAddress;
+    }
+
+    mapping (address => FreezablePolls) public frozenAccounts;
+
     event FrozenFunds(address target, bool frozen);
 
-    function freezeAccount(address target) external onlyAuthorized {
-        frozenAccounts[target] = true;
-        emit FrozenFunds(target, true);
+    function freezeAccount(address _target) external onlyAuthorized {
+        FreezablePolls storage user = frozenAccounts[_target];
+        require(!user.pollAddress[msg.sender], "Already frozen by this poll");
+        user.currentPollsParticipating += 1;
+        user.pollAddress[msg.sender] = true;
+        emit FrozenFunds(_target, true);
     }
 
-    function unFreezeAccount(address target) external onlyAuthorized {
-        frozenAccounts[target] = false;
-        emit FrozenFunds(target, false);
-    }
-
-    function isFrozen(address _target) external view returns (bool) {
-        return frozenAccounts[_target];
+    function unFreezeAccount(address _target) external onlyAuthorized {
+        FreezablePolls storage user = frozenAccounts[_target];
+        require(user.pollAddress[msg.sender], "Not already frozen by this poll");
+        user.currentPollsParticipating -= 1;
+        user.pollAddress[msg.sender] = false;
+        emit FrozenFunds(_target, false);
     }
 
     // @dev Limit token transfer if _sender is frozen.
     modifier canTransfer(address _sender) {
-        require(!frozenAccounts[_sender]);
+        FreezablePolls storage user = frozenAccounts[_sender];
+        require(user.currentPollsParticipating == 0, "Is part of certain polls");
         _;
     }
 
