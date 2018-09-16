@@ -141,8 +141,8 @@ contract("One Person One Vote Test", function(accounts) {
       revokeResult = await pollContract.revokeVote({ from: accounts[1] });
       voteTally1 = await pollContract.getVoteTally(1);
       voterCount1 = await pollContract.getVoterCount(1);
-      assert.equal(voteTally1, 0);
-      assert.equal(voterCount1, 0);
+      assert.equal(web3.toDecimal(voteTally1), 0);
+      assert.equal(web3.toDecimal(voterCount1), 0);
       truffleAssert.eventEmitted(revokeResult, "RevokedVote");
     });
     it("revoke vote: is a member & not voted", async () => {

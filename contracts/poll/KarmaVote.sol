@@ -12,11 +12,6 @@ contract KarmaVote is BasePoll {
     }
 
     function calculateVoteWeight(address _to) public view returns (uint);
-    // {
-    //     Voter storage sender = voters[_to];
-    //     if(sender.weight == 0) return 1;
-    //     return sender.weight;
-    // }
 
     function vote(uint8 _proposal) external isPollStarted {
         Voter storage sender = voters[msg.sender];
@@ -26,7 +21,7 @@ contract KarmaVote is BasePoll {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
-            proposals[_proposal].voteCount += voteWeight;
+            proposals[_proposal].voteWeight += voteWeight;
             proposals[_proposal].voteCount += 1;
             emit CastVote(msg.sender, _proposal, voteWeight);
         }  

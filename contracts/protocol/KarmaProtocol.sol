@@ -15,6 +15,10 @@ contract KarmaProtocol is ERC1261MetaData {
     constructor(bytes32 _orgName, bytes32 _orgSymbol) public ERC1261MetaData(_orgName, _orgSymbol) {
     }
 
+    function getCurrentKarma(address _to) public view returns (uint) {
+        return karma[_to].currentKarma;
+    }
+
     function upvote(address _to) isCurrentHolder public {
         require(_to != address(0), "can't increase karma for zero address");
         require(_to != msg.sender, "can't upvote self");
