@@ -2,6 +2,33 @@ var OnePersonOneVoteTest = artifacts.require("./OnePersonOneVoteTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
 
+const increaseTime = function(duration) {
+  const id = Date.now();
+  return new Promise((resolve, reject) => {
+    web3.currentProvider.sendAsync(
+      {
+        jsonrpc: "2.0",
+        method: "evm_increaseTime",
+        params: [duration],
+        id: id
+      },
+      err1 => {
+        if (err1) return reject(err1);
+        web3.currentProvider.sendAsync(
+          {
+            jsonrpc: "2.0",
+            method: "evm_mine",
+            id: id + 1
+          },
+          (err2, res) => {
+            return err2 ? reject(err2) : resolve(res);
+          }
+        );
+      }
+    );
+  });
+};
+
 contract("One Person One Vote Test", function(accounts) {
   context("poll has started", () => {
     beforeEach("setup", async () => {
@@ -44,7 +71,8 @@ contract("One Person One Vote Test", function(accounts) {
       await protocol3Contract.assignTo(accounts[1], [0], {
         from: accounts[0]
       });
-      var presentTime = new Date().getTime() / 1000;
+      var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+      const startTime = presentTime + 1000;
       pollContract = await OnePersonOneVoteTest.new(
         [
           protocol1Contract.address,
@@ -55,29 +83,31 @@ contract("One Person One Vote Test", function(accounts) {
         "0x57616e636861696e",
         "0x41646d696e20456c656374696f6e20466f722032303138",
         "0x4f6e6520506572736f6e204f6e6520566f7465",
-        presentTime + 0.5,
-        0
+        startTime,
+        "0"
       );
     });
     it("calculate vote weight : is a member", async () => {
-        voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
-        assert.equal(web3.toDecimal(voteWeight), 1);
-      });
-      it("calculate vote weight : not a member", async () => {
-        voteWeight = await pollContract.calculateVoteWeight(accounts[3]);
-        assert.equal(web3.toDecimal(voteWeight), 1);
-      });
-      it("cast vote: is a member", async () => {
-        result = await pollContract.vote(1, { from: accounts[1] });
-        assert.equal(web3.toDecimal(await pollContract.getVoteTally(1)), 1);
-        truffleAssert.eventEmitted(result, "CastVote");
-      });
-      it("cast vote: is a member but gives wrong proposal", async () => {
-        result = await pollContract.vote(2, { from: accounts[1] });
-        assert.equal(web3.toDecimal(await pollContract.getVoteTally(1)), 0);
-        assert.equal(web3.toDecimal(await pollContract.getVoteTally(0)), 0);
-        truffleAssert.eventEmitted(result, "TriedToVote");
-        truffleAssert.eventNotEmitted(result, "CastVote");
-      });
+      voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
+      assert.equal(web3.toDecimal(voteWeight), 1);
+    });
+    it("calculate vote weight : not a member", async () => {
+      voteWeight = await pollContract.calculateVoteWeight(accounts[3]);
+      assert.equal(web3.toDecimal(voteWeight), 1);
+    });
+    it("cast vote: is a member", async () => {
+      await increaseTime(10000);
+      result = await pollContract.vote(1, { from: accounts[1] });
+      assert.equal(web3.toDecimal(await pollContract.getVoteTally(1)), 1);
+      truffleAssert.eventEmitted(result, "CastVote");
+    });
+    it("cast vote: is a member but gives wrong proposal", async () => {
+      await increaseTime(10000);
+      result = await pollContract.vote(2, { from: accounts[1] });
+      assert.equal(web3.toDecimal(await pollContract.getVoteTally(1)), 0);
+      assert.equal(web3.toDecimal(await pollContract.getVoteTally(0)), 0);
+      truffleAssert.eventEmitted(result, "TriedToVote");
+      truffleAssert.eventNotEmitted(result, "CastVote");
+    });
   });
 });
