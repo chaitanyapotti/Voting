@@ -45,8 +45,8 @@ contract("DelegatedVoteTest", function(accounts) {
       from: accounts[0]
     });
     await protocol1Contract.assignTo(accounts[5], [0], {
-        from: accounts[0]
-      });
+      from: accounts[0]
+    });
     protocol2Contract = await ElectusProtocol.new(
       "0x55532026204368696e61",
       "0x5543",
@@ -61,11 +61,11 @@ contract("DelegatedVoteTest", function(accounts) {
       from: accounts[0]
     });
     await protocol2Contract.assignTo(accounts[3], [0], {
-        from: accounts[0]
-      });
+      from: accounts[0]
+    });
     await protocol2Contract.assignTo(accounts[4], [0], {
-        from: accounts[0]
-      });
+      from: accounts[0]
+    });
     protocol3Contract = await ElectusProtocol.new(
       "0x55532026204368696e61",
       "0x5543",
@@ -80,17 +80,17 @@ contract("DelegatedVoteTest", function(accounts) {
       from: accounts[0]
     });
     await protocol3Contract.assignTo(accounts[2], [0], {
-        from: accounts[0]
-      });
+      from: accounts[0]
+    });
     await protocol3Contract.assignTo(accounts[3], [0], {
-          from: accounts[0]
-      });
+      from: accounts[0]
+    });
     await protocol3Contract.assignTo(accounts[4], [0], {
-          from: accounts[0]
-      });
+      from: accounts[0]
+    });
     await protocol3Contract.assignTo(accounts[5], [0], {
-          from: accounts[0]
-      });
+      from: accounts[0]
+    });
     var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
     const startTime = presentTime + 1000;
     pollContract = await DelegatedVoteTest.new(
@@ -136,10 +136,8 @@ contract("DelegatedVoteTest", function(accounts) {
   it("cast vote : delegation loop - failure", async () => {
     await pollContract.delegate(accounts[2], { from: accounts[1] });
     await pollContract.delegate(accounts[3], { from: accounts[2] });
-    await pollContract.delegate(accounts[4], { from: accounts[3] });
-    await pollContract.delegate(accounts[5], { from: accounts[4] });
     try {
-      await pollContract.delegate(accounts[1], { from: accounts[5] });
+      await pollContract.delegate(accounts[1], { from: accounts[3] });
     } catch (error) {
       assert.exists(error);
     }
@@ -181,21 +179,19 @@ contract("DelegatedVoteTest", function(accounts) {
     truffleAssert.eventEmitted(vote, "CastVote");
     truffleAssert.eventNotEmitted(vote, "TriedToVote");
   });
-  it("revoke vote reverts", async()=>{
+  it("revoke vote reverts", async () => {
     await increaseTime(10000);
-      try{
-          await pollContract.revokeVote();
-      }
-      catch(error){
-          assert.exists(error);
-      }
-  })
-  it("poll hasn't started yet", async()=>{
-    try{
-        await pollContract.vote(0, { from: accounts[1] });
+    try {
+      await pollContract.revokeVote();
+    } catch (error) {
+      assert.exists(error);
     }
-    catch(error){
-        assert.exists(error);
+  });
+  it("poll hasn't started yet", async () => {
+    try {
+      await pollContract.vote(0, { from: accounts[1] });
+    } catch (error) {
+      assert.exists(error);
     }
-  })
+  });
 });
