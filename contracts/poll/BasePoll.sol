@@ -53,7 +53,7 @@ contract BasePoll is IPoll {
         pollType = _pollType;
         startTime = _startTime;
         endTime = _startTime + _duration;
-        require(_startTime >= now && startTime <= endTime, "Invalid Times");
+        require(_startTime >= now && _startTime <= _startTime + _duration, "Invalid Times");
         for (uint8 i = 0; i < _proposalNames.length; i++) {
             proposals.push(Proposal({name: _proposalNames[i], voteCount: 0, voteWeight: 0}));
         }
