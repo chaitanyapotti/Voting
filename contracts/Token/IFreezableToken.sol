@@ -1,9 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "./IERC20Token.sol";
 
-
-contract IFreezableToken is IERC20Token {
+interface IFreezableToken {
     event FrozenFunds(address target, bool frozen);
 
     function freezeAccount(address target) external;

@@ -2,18 +2,18 @@ pragma solidity ^0.4.24;
 
 import "./BasePollBound.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../Token/IFreezableToken.sol";
+import "../Token/FreezableToken.sol";
 
 
 contract TokenProportionalCappedBound is BasePollBound {
 
-    IFreezableToken public token;    
+    FreezableToken public token;    
     uint public capPercent;
     uint public capWeight;
 
-    constructor(address[] _protocolAddresses, address _tokenAddress, bytes32[] _proposalNames, uint8 _capPercent, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration)
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration)
         public BasePollBound (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
-        token = IFreezableToken(_tokenAddress);
+        token = FreezableToken(_tokenAddress);
         capPercent = _capPercent;
         capWeight = SafeMath.mul(_capPercent, token.totalSupply());
         require(_capPercent < 100, "Percentage must be less than 100");

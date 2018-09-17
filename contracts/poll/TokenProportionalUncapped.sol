@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "./BasePoll.sol";
-import "../Token/IFreezableToken.sol";
+import "../Token/FreezableToken.sol";
 
 
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter. 
@@ -9,11 +9,11 @@ import "../Token/IFreezableToken.sol";
 //All poll contracts post deployment must be authorized in the authorizable
 contract TokenProportionalUncapped is BasePoll {
 
-    IFreezableToken public token;
+    FreezableToken public token;
 
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
         public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
-        token = IFreezableToken(_tokenAddress);
+        token = FreezableToken(_tokenAddress);
     }
 
     function calculateVoteWeight(address _to) public view returns (uint) {

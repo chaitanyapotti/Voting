@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "./ERC20Token.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "../ownership/Authorizable.sol";
 import "./IFreezableToken.sol";
 
@@ -8,7 +8,7 @@ import "./IFreezableToken.sol";
 //Authorizable because contracts(poll) can freeze funds
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
-contract FreezableToken is ERC20Token, Authorizable, IFreezableToken {
+contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
     struct FreezablePolls{
         uint currentPollsParticipating;
         mapping(address => bool) pollAddress;
@@ -17,6 +17,11 @@ contract FreezableToken is ERC20Token, Authorizable, IFreezableToken {
     mapping (address => FreezablePolls) public frozenAccounts;
 
     event FrozenFunds(address target, bool frozen);
+
+    constructor() {
+        totalSupply_ = 100;
+        balances[msg.sender] = totalSupply_;
+    }
 
     function freezeAccount(address _target) external onlyAuthorized {
         FreezablePolls storage user = frozenAccounts[_target];
@@ -32,6 +37,10 @@ contract FreezableToken is ERC20Token, Authorizable, IFreezableToken {
         user.currentPollsParticipating -= 1;
         user.pollAddress[msg.sender] = false;
         emit FrozenFunds(_target, false);
+    }
+
+    function isFrozen(address _target) external view returns(bool){
+        return (frozenAccounts[_target].currentPollsParticipating != 0);
     }
 
     // @dev Limit token transfer if _sender is frozen.
