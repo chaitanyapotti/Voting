@@ -1,16 +1,16 @@
 pragma solidity ^0.4.24;
 
 import "./BasePollBound.sol";
-import "../Token/IFreezableToken.sol";
+import "../Token/FreezableToken.sol";
 
 
 contract TokenProportionalUncappedBound is BasePollBound {
 
-    IFreezableToken public token;
+    FreezableToken public token;
 
-    constructor(address[] _protocolAddresses, address _tokenAddress, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
         public BasePollBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
-        token = IFreezableToken(_tokenAddress);
+        token = FreezableToken(_tokenAddress);
     }
 
     function calculateVoteWeight(address _to) public view returns (uint) {

@@ -2,20 +2,20 @@ pragma solidity ^0.4.24;
 
 import "./BasePoll.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../Token/IFreezableToken.sol";
+import "../Token/FreezableToken.sol";
 
 
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter. 
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract TokenProportionalCapped is BasePoll {
 
-    IFreezableToken public token;
+    FreezableToken public token;
     uint public capPercent;
     uint public capWeight;
 
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType,
         uint _startTime, uint _duration) public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
-        token = IFreezableToken(_tokenAddress);
+        token = FreezableToken(_tokenAddress);
         capPercent = _capPercent;
         capWeight = SafeMath.mul(_capPercent, token.totalSupply());
         require(_capPercent < 100, "Percentage must be less than 100");
