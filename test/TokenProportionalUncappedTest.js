@@ -1,6 +1,4 @@
-var TokenProportionalUncappedTest = artifacts.require(
-  "./TokenProportionalUncappedTest.sol"
-);
+var TokenProportionalUncappedTest = artifacts.require("./TokenProportionalUncappedTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
 var TestToken = artifacts.require("./FreezableToken.sol");
@@ -14,33 +12,18 @@ contract("Token Proportional Uncapped Test", function(accounts) {
   let pollContract;
   let token;
   beforeEach("setup", async () => {
-    protocol1Contract = await ElectusProtocol.new(
-      "0x57616e636861696e",
-      "0x57414e"
-    );
-    await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
-      web3.fromAscii("black")
-    ]);
+    protocol1Contract = await ElectusProtocol.new("0x57616e636861696e", "0x57414e");
+    await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
     await protocol1Contract.assignTo(accounts[1], [0], {
       from: accounts[0]
     });
-    protocol2Contract = await ElectusProtocol.new(
-      "0x55532026204368696e61",
-      "0x5543"
-    );
-    await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
-      web3.fromAscii("black")
-    ]);
+    protocol2Contract = await ElectusProtocol.new("0x55532026204368696e61", "0x5543");
+    await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
     await protocol2Contract.assignTo(accounts[2], [0], {
       from: accounts[0]
     });
-    protocol3Contract = await ElectusProtocol.new(
-      "0x55532026204368696e61",
-      "0x5543"
-    );
-    await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
-      web3.fromAscii("black")
-    ]);
+    protocol3Contract = await ElectusProtocol.new("0x55532026204368696e61", "0x5543");
+    await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
     await protocol3Contract.assignTo(accounts[2], [0], {
       from: accounts[0]
     });
@@ -49,11 +32,7 @@ contract("Token Proportional Uncapped Test", function(accounts) {
     var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
     const startTime = presentTime + 1000;
     pollContract = await TokenProportionalUncappedTest.new(
-      [
-        protocol1Contract.address,
-        protocol2Contract.address,
-        protocol3Contract.address
-      ],
+      [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
       ["0x68656c6c6f", "0x776f726c64"],
       token.address,
       "0x57616e636861696e",

@@ -9,13 +9,8 @@ contract("Karma Vote Test", function(accounts) {
   let pollContract;
 
   beforeEach("setup", async () => {
-    protocolContract = await KarmaProtocol.new(
-      "0x57616e636861696e",
-      "0x57414e"
-    );
-    await protocolContract.addAttributeSet(web3.fromAscii("hair"), [
-      web3.fromAscii("black")
-    ]);
+    protocolContract = await KarmaProtocol.new("0x57616e636861696e", "0x57414e");
+    await protocolContract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
     await protocolContract.assignTo(accounts[1], [0], {
       from: accounts[0]
     });
@@ -50,20 +45,14 @@ contract("Karma Vote Test", function(accounts) {
     assert.equal(web3.toDecimal(currentKarma), 2);
   });
   it("upvote karma: not a member", async () => {
-    await assertRevert(
-      protocolContract.upvote(accounts[1], { from: accounts[7] })
-    );
+    await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[7] }));
   });
   it("upvote karma: has given already & trying it again", async () => {
     await protocolContract.upvote(accounts[1], { from: accounts[2] });
-    await assertRevert(
-      protocolContract.upvote(accounts[1], { from: accounts[2] })
-    );
+    await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[2] }));
   });
   it("upvote karma: self delegating failure", async () => {
-    await assertRevert(
-      protocolContract.upvote(accounts[1], { from: accounts[1] })
-    );
+    await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[1] }));
   });
   it("downvote karma", async () => {
     await protocolContract.upvote(accounts[1], { from: accounts[2] });
@@ -74,20 +63,14 @@ contract("Karma Vote Test", function(accounts) {
     assert.equal(web3.toDecimal(currentKarma), 0);
   });
   it("downvote karma : self downvote failure", async () => {
-    await assertRevert(
-      protocolContract.downvote(accounts[1], { from: accounts[1] })
-    );
+    await assertRevert(protocolContract.downvote(accounts[1], { from: accounts[1] }));
   });
   it("downvote karma: not a member", async () => {
-    await assertRevert(
-      protocolContract.downvote(accounts[1], { from: accounts[7] })
-    );
+    await assertRevert(protocolContract.downvote(accounts[1], { from: accounts[7] }));
   });
   it("downvote karma: cant downvote as the member hasn't upvoted", async () => {
     try {
-      await assertRevert(
-        protocolContract.upvote(accounts[1], { from: accounts[2] })
-      );
+      await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[2] }));
     } catch (error) {
       assert.exists(error);
     }
