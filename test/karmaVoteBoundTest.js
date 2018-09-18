@@ -33,10 +33,7 @@ contract("Karma Vote Bound Test", function(accounts) {
   beforeEach("setup", async () => {
     protocolContract = await KarmaProtocol.new(
       "0x57616e636861696e",
-      "0x57414e",
-      {
-        gas: 3000000
-      }
+      "0x57414e"
     );
     await protocolContract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")
@@ -75,22 +72,21 @@ contract("Karma Vote Bound Test", function(accounts) {
   it("cast vote: is a member & poll has started", async () => {
     await increaseTime(10000);
     result = await pollContract.vote(1, { from: accounts[1] });
-    voteTally = await pollContract.getVoteTally(1)
+    voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.toDecimal(voteTally), 1);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member & poll has not started", async () => {
-      try{
-        await pollContract.vote(1, { from: accounts[1] });
-      }
-      catch(error){
-          assert.exists(error)
-      }
+    try {
+      await pollContract.vote(1, { from: accounts[1] });
+    } catch (error) {
+      assert.exists(error);
+    }
   });
   it("cast vote: not a member & poll has started", async () => {
     await increaseTime(10000);
     result = await pollContract.vote(1, { from: accounts[7] });
-    voteTally = await pollContract.getVoteTally(1)
+    voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.toDecimal(voteTally), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
   });

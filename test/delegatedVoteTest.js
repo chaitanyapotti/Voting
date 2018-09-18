@@ -33,10 +33,7 @@ contract("DelegatedVoteTest", function(accounts) {
   beforeEach("setup", async () => {
     protocol1Contract = await ElectusProtocol.new(
       "0x57616e636861696e",
-      "0x57414e",
-      {
-        gas: 3000000
-      }
+      "0x57414e"
     );
     await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")
@@ -49,10 +46,7 @@ contract("DelegatedVoteTest", function(accounts) {
     });
     protocol2Contract = await ElectusProtocol.new(
       "0x55532026204368696e61",
-      "0x5543",
-      {
-        gas: 3000000
-      }
+      "0x5543"
     );
     await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")
@@ -68,10 +62,7 @@ contract("DelegatedVoteTest", function(accounts) {
     });
     protocol3Contract = await ElectusProtocol.new(
       "0x55532026204368696e61",
-      "0x5543",
-      {
-        gas: 3000000
-      }
+      "0x5543"
     );
     await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")

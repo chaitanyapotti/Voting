@@ -33,10 +33,7 @@ contract("Karma Vote Test", function(accounts) {
   beforeEach("setup", async () => {
     protocolContract = await KarmaProtocol.new(
       "0x57616e636861696e",
-      "0x57414e",
-      {
-        gas: 3000000
-      }
+      "0x57414e"
     );
     await protocolContract.addAttributeSet(web3.fromAscii("hair"), [
       web3.fromAscii("black")
