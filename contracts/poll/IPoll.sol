@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
-/// @title ERC-1420 Poll Standard
-/// @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1420.md
-///  Note: the ERC-165 identifier for this interface is 0x1d8362cf.
+/// @title ERC-1417 Poll Standard
+/// @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1417.md
+///  Note: the ERC-165 identifier for this interface is 0x4fad898b.
 interface IPoll {
     /// @dev This emits when a person tries to vote without necessary permissions. Useful for auditing purposes.
     ///  E.g.: This is to prevent an admin to revoke permissions and to calculate the poll result had they not been removed.
@@ -69,8 +69,6 @@ interface IPoll {
     /// @notice Handles the unvote logic
     /// @dev updates the appropriate data structures regarding the unvote
     function revokeVote() external;
-
-    //Optional parameters
 
     /// @notice gets the name of the poll e.g.: "Admin Election for Autumn 2018"
     /// @dev Set the name in the constructor of the poll
