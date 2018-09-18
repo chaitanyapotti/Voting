@@ -26,7 +26,8 @@
     "protocol",
     "electus",
     "voting",
-    "eip-1400"
+    "poll",
+    "eip-1417"
   ],
   "author": "chaitanya potti",
   "license": "MIT",
