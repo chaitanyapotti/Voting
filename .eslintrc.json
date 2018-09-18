@@ -10,6 +10,10 @@
     "mocha": true
   },
   "rules": {
-    "prettier/prettier": "error"
+    "max-len": [2, { "code": 150, "ignoreComments": true }],
+    "prettier/prettier": ["error"],
+    "flowtype/require-valid-file-annotation": "off",
+    "import/named": "off",
+    "import/no-extraneous-dependencies": [2, { "devDependencies": ["**/*.js"] }]
   }
 }
