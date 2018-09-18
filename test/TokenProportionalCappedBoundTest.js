@@ -131,7 +131,11 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
   });
   it("revoke vote: not a member", async () => {
     await increaseTime(10000);
-    assertRevert(await pollContract.revokeVote({ from: accounts[3] }));
+    try {
+      assertRevert(await pollContract.revokeVote({ from: accounts[3] }));
+    } catch (error) {
+      assert.exists(error);
+    }
   });
   it("member tries to unfreeze his account after poll ends", async () => {
     await increaseTime(1000000000000);
