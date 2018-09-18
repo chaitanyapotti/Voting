@@ -9,7 +9,7 @@ import "./IFreezableToken.sol";
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
 contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
-    struct FreezablePolls{
+    struct FreezablePolls {
         uint currentPollsParticipating;
         mapping(address => bool) pollAddress;
     }
@@ -18,7 +18,7 @@ contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
 
     event FrozenFunds(address target, bool frozen);
 
-    constructor() {
+    constructor() public {
         totalSupply_ = 100;
         balances[msg.sender] = totalSupply_;
     }
@@ -39,7 +39,7 @@ contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
         emit FrozenFunds(_target, false);
     }
 
-    function isFrozen(address _target) external view returns(bool){
+    function isFrozen(address _target) external view returns(bool) {
         return (frozenAccounts[_target].currentPollsParticipating != 0);
     }
 

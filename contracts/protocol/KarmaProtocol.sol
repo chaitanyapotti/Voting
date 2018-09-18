@@ -19,7 +19,7 @@ contract KarmaProtocol is ERC1261MetaData {
         return karma[_to].currentKarma;
     }
 
-    function upvote(address _to) isCurrentHolder public {
+    function upvote(address _to) public isCurrentHolder {
         require(_to != address(0), "can't increase karma for zero address");
         require(_to != msg.sender, "can't upvote self");
         require(isCurrentMember(_to), "the person upvoted must be a member");
@@ -29,7 +29,7 @@ contract KarmaProtocol is ERC1261MetaData {
         data.currentKarma += 1;
     }
 
-    function downvote(address _to) isCurrentHolder public {
+    function downvote(address _to) public isCurrentHolder {
         require(_to != address(0), "can't decrease karma for zero address");
         require(_to != msg.sender, "can't downvote self");
         require(isCurrentMember(_to), "the person downvoted must be a member");

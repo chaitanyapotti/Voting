@@ -11,17 +11,14 @@ contract TokenProportionalCappedBound is BasePollBound {
     uint public capPercent;
     uint public capWeight;
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration)
-        public BasePollBound (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, 
+        bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public 
+        BasePollBound (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, 
+        _duration) {
         token = FreezableToken(_tokenAddress);
         capPercent = _capPercent;
         capWeight = SafeMath.mul(_capPercent, token.totalSupply());
         require(_capPercent < 100, "Percentage must be less than 100");
-    }
-
-    function calculateVoteWeight(address _to) public view returns (uint) {
-        uint currentWeight = SafeMath.mul(token.balanceOf(_to), 100);
-        return currentWeight > capWeight ? capWeight : currentWeight;
     }
 
     function vote(uint8 _proposal) external checkTime {
@@ -29,7 +26,7 @@ contract TokenProportionalCappedBound is BasePollBound {
         uint voteWeight = calculateVoteWeight(msg.sender);
         //vote weight is multiplied by 100 to account for decimals
         
-        if(canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
+        if (canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
@@ -38,8 +35,7 @@ contract TokenProportionalCappedBound is BasePollBound {
             emit CastVote(msg.sender, _proposal, sender.weight);
             //Need to check whether we can freeze or not.!
             token.freezeAccount(msg.sender);
-        }
-        else {
+        } else {
             emit TriedToVote(msg.sender, _proposal, voteWeight);
         }
     }
@@ -62,5 +58,10 @@ contract TokenProportionalCappedBound is BasePollBound {
     function unFreezeTokens() external isValidVoter {
         require(hasPollEnded(), "Poll has not ended");
         token.unFreezeAccount(msg.sender);
+    }
+
+    function calculateVoteWeight(address _to) public view returns (uint) {
+        uint currentWeight = SafeMath.mul(token.balanceOf(_to), 100);
+        return currentWeight > capWeight ? capWeight : currentWeight;
     }
 }

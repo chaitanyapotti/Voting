@@ -11,20 +11,17 @@ contract TokenProportionalUncapped is BasePoll {
 
     FreezableToken public token;
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
-        public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, 
+    bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public BasePoll
+        (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
         token = FreezableToken(_tokenAddress);
-    }
-
-    function calculateVoteWeight(address _to) public view returns (uint) {
-        return token.balanceOf(_to);
     }
 
     function vote(uint8 _proposal) external isPollStarted {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
         
-        if(canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
+        if (canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;
             sender.weight = voteWeight;
@@ -33,8 +30,7 @@ contract TokenProportionalUncapped is BasePoll {
             emit CastVote(msg.sender, _proposal, sender.weight);
             //Need to check whether we can freeze or not.!
             token.freezeAccount(msg.sender);
-        }
-        else {
+        } else {
             emit TriedToVote(msg.sender, _proposal, voteWeight);
         }
     }
@@ -51,5 +47,9 @@ contract TokenProportionalUncapped is BasePoll {
         sender.weight = 0;
         emit RevokedVote(msg.sender, votedProposal, voteWeight);
         token.unFreezeAccount(msg.sender);
+    }
+
+    function calculateVoteWeight(address _to) public view returns (uint) {
+        return token.balanceOf(_to);
     }
 }

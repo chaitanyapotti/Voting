@@ -50,6 +50,29 @@ contract MyContract is IPoll {
 }
 ```
 
+#Linting
+To lint solidity, use
+
+```sh
+node ./node_modules/solhint ./contracts/poll/BasePoll.sol
+```
+
+For linting Solidity files you need to run Solhint with one or more Globs as arguments. For example, to lint all files inside contracts directory, you can do:
+
+```sh
+solhint "contracts/**/*.sol"
+```
+
+To lint a single file:
+
+```sh
+solhint contracts/MyToken.sol
+```
+
+To disable linting for next line, use
+
+// solhint-disable-next-line
+
 ## Testing
 
 Unit test are critical to the Electus Voting framework. They help ensure code quality and mitigate against security vulnerabilities. The directory structure within the `/test` directory corresponds to the `/contracts` directory. OpenZeppelin uses Mocha’s JavaScript testing framework and Chai’s assertion library. To learn more about how to tests are structured, please reference Voting's Testing Guide.

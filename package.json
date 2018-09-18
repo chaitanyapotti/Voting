@@ -8,7 +8,18 @@
     "stop:blockchain:client": "bash ./scripts/stop-blockchain.sh",
     "test": "npm run start:blockchain:client & truffle migrate --reset --compile-all && truffle test --network development",
     "post-test": "npm run stop:blockchain:client",
-    "coverage": "touch allFiredEvents & ./node_modules/.bin/solidity-coverage"
+    "coverage": "touch allFiredEvents & ./node_modules/.bin/solidity-coverage",
+    "precommit": "lint-staged && solhint \"contracts/*.sol\"",
+    "prettier": "prettier --write \"**/*.{js,json,css,md}\"",
+    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
+    "lint:sol": "solhint contracts/**/*.sol",
+    "lint:js": "eslint test/**/*.js"
+  },
+  "lint-staged": {
+    "**/*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "files": [
     "contracts",
@@ -41,6 +52,19 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
-    "solidity-coverage": "^0.5.11"
+    "solidity-coverage": "^0.5.11",
+    "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "solhint": "^1.2.1",
+    "husky": "^0.14.3"
   }
 }
