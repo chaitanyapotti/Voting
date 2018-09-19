@@ -1,4 +1,4 @@
-var OnePersonOneVoteTest = artifacts.require("./OnePersonOneVoteBoundTest.sol");
+var OnePersonOneVoteBoundTest = artifacts.require("./OnePersonOneVoteBoundTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
 const { assertRevert } = require("./utils/assertRevert");
@@ -27,7 +27,7 @@ contract("One Person One Vote Bound Test", function(accounts) {
     });
     var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
     const startTime = presentTime + 1000;
-    pollContract = await OnePersonOneVoteTest.new(
+    pollContract = await OnePersonOneVoteBoundTest.new(
       [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
       ["0x68656c6c6f", "0x776f726c64"],
       "0x57616e636861696e",
