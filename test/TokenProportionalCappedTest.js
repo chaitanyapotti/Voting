@@ -28,7 +28,11 @@ contract("Token Proportional Capped Test", function(accounts) {
       from: accounts[0]
     });
     token = await TestToken.new();
-    await token.transfer(accounts[2], 100);
+    await token.transfer(accounts[2], 50);
+    await token.approve(accounts[2], 50);
+    await token.transferFrom(accounts[0], accounts[1], 50, {
+      from: accounts[2]
+    });
     var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
     const startTime = presentTime + 1000;
     pollContract = await TokenProportionalCappedTest.new(
@@ -99,5 +103,17 @@ contract("Token Proportional Capped Test", function(accounts) {
   it("revoke vote: not a member", async () => {
     await increaseTime(10000);
     await assertRevert(pollContract.revokeVote({ from: accounts[3] }));
+  });
+  it("remove authorization", async () => {
+    await token.addAuthorized(accounts[2]);
+    await token.removeAuthorized(accounts[2]);
+  });
+  it("self remove authorization", async () => {
+    await token.addAuthorized(accounts[2]);
+    await token.selfRemoveAuthorized({ from: accounts[2] });
+  });
+  it("transfer authorization", async () => {
+    await token.addAuthorized(accounts[2]);
+    await token.transferAuthorization(accounts[1], { from: accounts[2] });
   });
 });
