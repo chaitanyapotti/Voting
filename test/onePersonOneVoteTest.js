@@ -136,10 +136,6 @@ contract("One Person One Vote Test", function(accounts) {
     const pollStartTime = await pollContract.getStartTime();
     assert.equal(pollStartTime, startTime);
   });
-  it("gets end time of the poll", async () => {
-    const endTime = await pollContract.getStartTime();
-    assert.equal(endTime, startTime);
-  });
   it("get proposals", async () => {
     const proposals = await pollContract.getProposals();
     // eslint-disable-next-line no-control-regex

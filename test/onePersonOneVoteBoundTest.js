@@ -9,6 +9,7 @@ contract("One Person One Vote Bound Test", function(accounts) {
   let protocol2Contract;
   let protocol3Contract;
   let pollContract;
+  let startTime;
   beforeEach("setup", async () => {
     protocol1Contract = await ElectusProtocol.new("0x57616e636861696e", "0x57414e");
     await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
@@ -26,7 +27,7 @@ contract("One Person One Vote Bound Test", function(accounts) {
       from: accounts[0]
     });
     var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
-    const startTime = presentTime + 1000;
+    startTime = presentTime + 1000;
     pollContract = await OnePersonOneVoteBoundTest.new(
       [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
       ["0x68656c6c6f", "0x776f726c64"],
@@ -36,6 +37,10 @@ contract("One Person One Vote Bound Test", function(accounts) {
       startTime,
       "1000000"
     );
+  });
+  it("gets end time of the poll", async () => {
+    const endTime = await pollContract.getEndTime();
+    assert.equal(web3.toDecimal(endTime), startTime + 1000000);
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
@@ -72,5 +77,9 @@ contract("One Person One Vote Bound Test", function(accounts) {
     await increaseTime(10000);
     const result = await pollContract.hasPollEnded({ from: accounts[1] });
     assert.equal(result, false);
+  });
+  it("gets end time of the poll", async () => {
+    const endTime = await pollContract.getEndTime();
+    assert.equal(web3.toDecimal(endTime), startTime + 1000000);
   });
 });
