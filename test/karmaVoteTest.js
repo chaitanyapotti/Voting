@@ -10,7 +10,7 @@ contract("Karma Vote Test", function(accounts) {
 
   beforeEach("setup", async () => {
     protocolContract = await KarmaProtocol.new("0x57616e636861696e", "0x57414e");
-    await protocolContract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
+    await protocolContract.addAttributeSet(web3.utils.fromAscii("hair"), [web3.utils.fromAscii("black")]);
     await protocolContract.assignTo(accounts[1], [0], {
       from: accounts[0]
     });
@@ -26,7 +26,7 @@ contract("Karma Vote Test", function(accounts) {
     await protocolContract.assignTo(accounts[5], [0], {
       from: accounts[0]
     });
-    var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+    var presentTime = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
     const startTime = presentTime + 1000;
     pollContract = await KarmaVoteTest.new(
       [protocolContract.address],
@@ -42,7 +42,7 @@ contract("Karma Vote Test", function(accounts) {
     await protocolContract.upvote(accounts[1], { from: accounts[2] });
     await protocolContract.upvote(accounts[1], { from: accounts[3] });
     const currentKarma = await protocolContract.getCurrentKarma(accounts[1]);
-    assert.equal(web3.toDecimal(currentKarma), 2);
+    assert.equal(web3.utils.toDecimal(currentKarma), 2);
   });
   it("upvote karma: not a member", async () => {
     await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[7] }));
@@ -60,7 +60,7 @@ contract("Karma Vote Test", function(accounts) {
     await protocolContract.downvote(accounts[1], { from: accounts[2] });
     await protocolContract.downvote(accounts[1], { from: accounts[3] });
     const currentKarma = await protocolContract.getCurrentKarma(accounts[1]);
-    assert.equal(web3.toDecimal(currentKarma), 0);
+    assert.equal(web3.utils.toDecimal(currentKarma), 0);
   });
   it("downvote karma : self downvote failure", async () => {
     await assertRevert(protocolContract.downvote(accounts[1], { from: accounts[1] }));
@@ -77,23 +77,23 @@ contract("Karma Vote Test", function(accounts) {
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
-    assert.equal(web3.toDecimal(voteWeight), 1);
+    assert.equal(web3.utils.toDecimal(voteWeight), 1);
   });
   it("calculate vote weight : is a member and has karma", async () => {
     await protocolContract.upvote(accounts[1], { from: accounts[2] });
     await protocolContract.upvote(accounts[1], { from: accounts[3] });
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
-    assert.equal(web3.toDecimal(voteWeight), 3);
+    assert.equal(web3.utils.toDecimal(voteWeight), 3);
   });
   it("calculate vote weight : not a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[7]);
-    assert.equal(web3.toDecimal(voteWeight), 1);
+    assert.equal(web3.utils.toDecimal(voteWeight), 1);
   });
   it("cast vote: is a member", async () => {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally), 1);
+    assert.equal(web3.utils.toDecimal(voteTally), 1);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member but gives wrong proposal", async () => {
@@ -101,8 +101,8 @@ contract("Karma Vote Test", function(accounts) {
     const result = await pollContract.vote(2, { from: accounts[1] });
     const voteTally0 = await pollContract.getVoteTally(0);
     const voteTally1 = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally0), 0);
-    assert.equal(web3.toDecimal(voteTally1), 0);
+    assert.equal(web3.utils.toDecimal(voteTally0), 0);
+    assert.equal(web3.utils.toDecimal(voteTally1), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
     truffleAssert.eventNotEmitted(result, "CastVote");
   });
@@ -111,8 +111,8 @@ contract("Karma Vote Test", function(accounts) {
     const result = await pollContract.vote(1, { from: accounts[7] });
     const voteTally0 = await pollContract.getVoteTally(0);
     const voteTally1 = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally0), 0);
-    assert.equal(web3.toDecimal(voteTally1), 0);
+    assert.equal(web3.utils.toDecimal(voteTally0), 0);
+    assert.equal(web3.utils.toDecimal(voteTally1), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
     truffleAssert.eventNotEmitted(result, "CastVote");
   });
@@ -120,7 +120,7 @@ contract("Karma Vote Test", function(accounts) {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally), 1);
+    assert.equal(web3.utils.toDecimal(voteTally), 1);
     const result1 = await pollContract.vote(1, { from: accounts[1] });
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventEmitted(result1, "TriedToVote");
@@ -132,7 +132,7 @@ contract("Karma Vote Test", function(accounts) {
     await protocolContract.upvote(accounts[1], { from: accounts[3] });
     const result = await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally), 3);
+    assert.equal(web3.utils.toDecimal(voteTally), 3);
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventNotEmitted(result, "TriedToVote");
   });
@@ -141,13 +141,13 @@ contract("Karma Vote Test", function(accounts) {
     await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
     const voterCount = await pollContract.getVoterCount(1);
-    assert.equal(web3.toDecimal(voteTally), 1);
-    assert.equal(web3.toDecimal(voterCount), 1); // proposal voter count
+    assert.equal(web3.utils.toDecimal(voteTally), 1);
+    assert.equal(web3.utils.toDecimal(voterCount), 1); // proposal voter count
     const revokeResult = await pollContract.revokeVote({ from: accounts[1] });
     const voteTally1 = await pollContract.getVoteTally(1);
     const voterCount1 = await pollContract.getVoterCount(1);
-    assert.equal(web3.toDecimal(voteTally1), 0);
-    assert.equal(web3.toDecimal(voterCount1), 0);
+    assert.equal(web3.utils.toDecimal(voteTally1), 0);
+    assert.equal(web3.utils.toDecimal(voterCount1), 0);
     truffleAssert.eventEmitted(revokeResult, "RevokedVote");
   });
   it("revoke vote: is a member who has karma & Voted", async () => {
@@ -157,13 +157,13 @@ contract("Karma Vote Test", function(accounts) {
     await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
     const voterCount = await pollContract.getVoterCount(1);
-    assert.equal(web3.toDecimal(voteTally), 3);
-    assert.equal(web3.toDecimal(voterCount), 1); // proposal voter count
+    assert.equal(web3.utils.toDecimal(voteTally), 3);
+    assert.equal(web3.utils.toDecimal(voterCount), 1); // proposal voter count
     const revokeResult = await pollContract.revokeVote({ from: accounts[1] });
     const voteTally1 = await pollContract.getVoteTally(1);
     const voterCount1 = await pollContract.getVoterCount(1);
-    assert.equal(web3.toDecimal(voteTally1), 0);
-    assert.equal(web3.toDecimal(voterCount1), 0);
+    assert.equal(web3.utils.toDecimal(voteTally1), 0);
+    assert.equal(web3.utils.toDecimal(voterCount1), 0);
     truffleAssert.eventEmitted(revokeResult, "RevokedVote");
   });
   it("revoke vote: is a member & not voted", async () => {

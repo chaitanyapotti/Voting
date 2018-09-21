@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 import "./IPoll.sol";

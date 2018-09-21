@@ -12,21 +12,21 @@ contract("One Person One Vote Bound Test", function(accounts) {
   let startTime;
   beforeEach("setup", async () => {
     protocol1Contract = await ElectusProtocol.new("0x57616e636861696e", "0x57414e");
-    await protocol1Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
+    await protocol1Contract.addAttributeSet(web3.utils.fromAscii("hair"), [web3.utils.fromAscii("black")]);
     await protocol1Contract.assignTo(accounts[1], [0], {
       from: accounts[0]
     });
     protocol2Contract = await ElectusProtocol.new("0x55532026204368696e61", "0x5543");
-    await protocol2Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
+    await protocol2Contract.addAttributeSet(web3.utils.fromAscii("hair"), [web3.utils.fromAscii("black")]);
     await protocol2Contract.assignTo(accounts[2], [0], {
       from: accounts[0]
     });
     protocol3Contract = await ElectusProtocol.new("0x55532026204368696e61", "0x5543");
-    await protocol3Contract.addAttributeSet(web3.fromAscii("hair"), [web3.fromAscii("black")]);
+    await protocol3Contract.addAttributeSet(web3.utils.fromAscii("hair"), [web3.utils.fromAscii("black")]);
     await protocol3Contract.assignTo(accounts[1], [0], {
       from: accounts[0]
     });
-    var presentTime = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+    var presentTime = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
     startTime = presentTime + 1000;
     pollContract = await OnePersonOneVoteBoundTest.new(
       [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
@@ -40,17 +40,17 @@ contract("One Person One Vote Bound Test", function(accounts) {
   });
   it("gets end time of the poll", async () => {
     const endTime = await pollContract.getEndTime();
-    assert.equal(web3.toDecimal(endTime), startTime + 1000000);
+    assert.equal(web3.utils.toDecimal(endTime), startTime + 1000000);
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
-    assert.equal(web3.toDecimal(voteWeight), 1);
+    assert.equal(web3.utils.toDecimal(voteWeight), 1);
   });
   it("cast vote: is a member & poll has started", async () => {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[1] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally), 1);
+    assert.equal(web3.utils.toDecimal(voteTally), 1);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member & poll has not started", async () => {
@@ -60,7 +60,7 @@ contract("One Person One Vote Bound Test", function(accounts) {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[3] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.toDecimal(voteTally), 0);
+    assert.equal(web3.utils.toDecimal(voteTally), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
   });
   it("revoke vote: is a member & voted (poll has started)", async () => {
@@ -80,6 +80,6 @@ contract("One Person One Vote Bound Test", function(accounts) {
   });
   it("gets end time of the poll", async () => {
     const endTime = await pollContract.getEndTime();
-    assert.equal(web3.toDecimal(endTime), startTime + 1000000);
+    assert.equal(web3.utils.toDecimal(endTime), startTime + 1000000);
   });
 });

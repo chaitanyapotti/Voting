@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 //To be deployed along with Ownable.
 //This contract won't change with time. Hence, no interface for it
 
