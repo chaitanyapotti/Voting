@@ -27,7 +27,6 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     await protocol3Contract.assignTo(accounts[2], [0], {
       from: accounts[0]
     });
-    console.log("here");
     token = await TestToken.new();
     await token.transfer(accounts[2], 100);
     var presentTime = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
