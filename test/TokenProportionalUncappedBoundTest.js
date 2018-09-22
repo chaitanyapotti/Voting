@@ -1,7 +1,7 @@
 var TokenProportionalUncappedBoundTest = artifacts.require("./TokenProportionalUncappedBoundTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
-var TestToken = artifacts.require("./FreezableToken.sol");
+var TestToken = artifacts.require("./FreezableTestToken.sol");
 const { assertRevert } = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 

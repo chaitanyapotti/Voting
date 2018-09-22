@@ -18,11 +18,6 @@ contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
 
     event FrozenFunds(address target, bool frozen);
 
-    constructor() public {
-        totalSupply_ = 100;
-        balances[msg.sender] = totalSupply_;
-    }
-
     function freezeAccount(address _target) external onlyAuthorized {
         FreezablePolls storage user = frozenAccounts[_target];
         require(!user.pollAddress[msg.sender], "Already frozen by this poll");

@@ -1,7 +1,7 @@
 var TokenProportionalCappedBoundTest = artifacts.require("./TokenProportionalCappedBoundTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
-var TestToken = artifacts.require("./FreezableToken.sol");
+var TestToken = artifacts.require("./FreezableTestToken.sol");
 const { assertRevert } = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
@@ -27,6 +27,7 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     await protocol3Contract.assignTo(accounts[2], [0], {
       from: accounts[0]
     });
+    console.log("here");
     token = await TestToken.new();
     await token.transfer(accounts[2], 100);
     var presentTime = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
