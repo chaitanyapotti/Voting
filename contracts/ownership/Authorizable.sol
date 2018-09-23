@@ -15,7 +15,7 @@ contract Authorizable is Ownable {
     }
 
     function isAuthorized(address sender) public view returns (bool) {
-        return authorized[sender] || owner == sender;
+        return authorized[sender] || owner() == sender;
     }
 
     function addAuthorized(address _toAdd) public onlyOwner {
@@ -25,17 +25,17 @@ contract Authorizable is Ownable {
 
     function removeAuthorized(address _toRemove) public onlyOwner {
         require(_toRemove != 0);
-        require(_toRemove != owner);
+        require(_toRemove != owner());
         authorized[_toRemove] = false;
     }
 
     function selfRemoveAuthorized() public onlyAuthorized {
-        require(owner != msg.sender);
+        require(owner() != msg.sender);
         authorized[msg.sender] = false;
     }
 
     function transferAuthorization(address _to) public onlyAuthorized {
-        require(msg.sender != owner, "Owner can't transfer authorization");
+        require(msg.sender != owner(), "Owner can't transfer authorization");
         authorized[msg.sender] = false;
         authorized[_to] = true;
     }

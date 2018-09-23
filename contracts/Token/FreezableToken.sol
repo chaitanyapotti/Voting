@@ -1,6 +1,6 @@
 pragma solidity ^0.4.25;
 
-import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../ownership/Authorizable.sol";
 import "./IFreezableToken.sol";
 
@@ -8,7 +8,7 @@ import "./IFreezableToken.sol";
 //Authorizable because contracts(poll) can freeze funds
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
-contract FreezableToken is StandardToken, Authorizable, IFreezableToken {
+contract FreezableToken is ERC20, Authorizable, IFreezableToken {
     struct FreezablePolls {
         uint currentPollsParticipating;
         mapping(address => bool) pollAddress;
