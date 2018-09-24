@@ -12,11 +12,17 @@ contract KarmaProtocol is ERC1261MetaData {
 
     mapping(address => KarmaData) public karma;
 
+    uint private totalKarmaPresent;
+
     constructor(bytes32 _orgName, bytes32 _orgSymbol) public ERC1261MetaData(_orgName, _orgSymbol) {
     }
 
     function getCurrentKarma(address _to) public view returns (uint) {
         return karma[_to].currentKarma;
+    }
+
+    function getTotalKarma() public view returns (uint) {
+        return totalKarmaPresent + currentMemberCount;
     }
 
     function upvote(address _to) public isCurrentHolder {
@@ -27,6 +33,7 @@ contract KarmaProtocol is ERC1261MetaData {
         require(!data.givenFrom[msg.sender], "Already given karma");
         data.givenFrom[msg.sender] = true;
         data.currentKarma += 1;
+        totalKarmaPresent += 1;
     }
 
     function downvote(address _to) public isCurrentHolder {
@@ -37,5 +44,6 @@ contract KarmaProtocol is ERC1261MetaData {
         require(data.givenFrom[msg.sender], "Haven't given karma yet. can't reduce now");
         data.givenFrom[msg.sender] = false;
         data.currentKarma -= 1;
+        totalKarmaPresent -= 1;
     }
 }

@@ -44,6 +44,14 @@ contract("Karma Vote Test", function(accounts) {
     const currentKarma = await protocolContract.getCurrentKarma(accounts[1]);
     assert.equal(web3.utils.toDecimal(currentKarma), 2);
   });
+  it("get total karma", async () => {
+    await protocolContract.upvote(accounts[1], { from: accounts[2] });
+    await protocolContract.upvote(accounts[1], { from: accounts[3] });
+    await protocolContract.upvote(accounts[2], { from: accounts[3] });
+    await protocolContract.downvote(accounts[2], { from: accounts[3] });
+    const currentKarma = await protocolContract.getTotalKarma();
+    assert.equal(web3.utils.toDecimal(currentKarma), 7);
+  });
   it("upvote karma: not a member", async () => {
     await assertRevert(protocolContract.upvote(accounts[1], { from: accounts[7] }));
   });

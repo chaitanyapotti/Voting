@@ -1,6 +1,7 @@
 pragma solidity ^0.4.25;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 import "../ownership/Authorizable.sol";
 import "./IFreezableToken.sol";
 
@@ -8,15 +9,30 @@ import "./IFreezableToken.sol";
 //Authorizable because contracts(poll) can freeze funds
 //Note that poll contract must be added into Authorizable
 //This can be inherited because Authorizable is deployed with Freezable Token
-contract FreezableToken is ERC20, Authorizable, IFreezableToken {
+contract FreezableToken is ERC20, Authorizable, IFreezableToken, MinterRole {
     struct FreezablePolls {
         uint currentPollsParticipating;
         mapping(address => bool) pollAddress;
     }
 
+    bool private _mintingFinished = false;
+    uint public totalMintableSupply;
+    event MintingFinish();
+    event FrozenFunds(address target, bool frozen);
+
     mapping (address => FreezablePolls) public frozenAccounts;
 
-    event FrozenFunds(address target, bool frozen);
+    modifier onlyBeforeMintingFinished() {
+        require(!_mintingFinished);
+        _;
+    }
+
+     // @dev Limit token transfer if _sender is frozen.
+    modifier canTransfer(address _sender) {
+        FreezablePolls storage user = frozenAccounts[_sender];
+        require(user.currentPollsParticipating == 0, "Is part of certain polls");
+        _;
+    }
 
     function freezeAccount(address _target) external onlyAuthorized {
         FreezablePolls storage user = frozenAccounts[_target];
@@ -38,13 +54,6 @@ contract FreezableToken is ERC20, Authorizable, IFreezableToken {
         return (frozenAccounts[_target].currentPollsParticipating != 0);
     }
 
-    // @dev Limit token transfer if _sender is frozen.
-    modifier canTransfer(address _sender) {
-        FreezablePolls storage user = frozenAccounts[_sender];
-        require(user.currentPollsParticipating == 0, "Is part of certain polls");
-        _;
-    }
-
     function transfer(address _to, uint256 _value) public canTransfer(msg.sender) returns (bool success) {
         // Call StandardToken.transfer()
         return super.transfer(_to, _value);
@@ -54,6 +63,27 @@ contract FreezableToken is ERC20, Authorizable, IFreezableToken {
     returns (bool success) {
         // Call StandardToken.transferForm()
         return super.transferFrom(_from, _to, _value);
+    }
+
+    function getTotalMintableSupply() public view returns (uint) {
+        return totalMintableSupply;
+    }
+
+    function mintingFinished() public view returns(bool) {
+        return _mintingFinished;
+    }
+
+    function mint(address _to, uint256 _amount) public onlyMinter 
+        onlyBeforeMintingFinished returns (bool) {
+        require(totalSupply() <= totalMintableSupply, "Can't mint more than totalSupply");
+        _mint(_to, _amount);
+        return true;
+    }
+
+    function finishMinting() public onlyMinter onlyBeforeMintingFinished returns (bool) {
+        _mintingFinished = true;
+        emit MintingFinish();
+        return true;
     }
 }
 

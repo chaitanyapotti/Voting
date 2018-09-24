@@ -5,6 +5,7 @@ import "../Token/FreezableToken.sol";
 
 contract FreezableTestToken is FreezableToken {
     constructor() public {
-        _mint(msg.sender, 100);
+        totalMintableSupply = 100;
+        mint(msg.sender, 100);
     }
 } 
