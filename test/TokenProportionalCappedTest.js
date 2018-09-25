@@ -39,14 +39,13 @@ contract("Token Proportional Capped Test", function(accounts) {
       [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
       ["0x68656c6c6f", "0x776f726c64"],
       token.address,
-      1,
+      100,
       "0x57616e636861696e",
       "0x41646d696e20456c656374696f6e20466f722032303138",
       "0x4f6e6520506572736f6e204f6e6520566f7465",
       startTime,
       "0"
     );
-    await token.addAuthorized(pollContract.address);
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[2]);
@@ -103,17 +102,5 @@ contract("Token Proportional Capped Test", function(accounts) {
   it("revoke vote: not a member", async () => {
     await increaseTime(10000);
     await assertRevert(pollContract.revokeVote({ from: accounts[3] }));
-  });
-  it("remove authorization", async () => {
-    await token.addAuthorized(accounts[2]);
-    await token.removeAuthorized(accounts[2]);
-  });
-  it("self remove authorization", async () => {
-    await token.addAuthorized(accounts[2]);
-    await token.selfRemoveAuthorized({ from: accounts[2] });
-  });
-  it("transfer authorization", async () => {
-    await token.addAuthorized(accounts[2]);
-    await token.transferAuthorization(accounts[1], { from: accounts[2] });
   });
 });

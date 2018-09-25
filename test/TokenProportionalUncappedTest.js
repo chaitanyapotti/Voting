@@ -41,7 +41,6 @@ contract("Token Proportional Uncapped Test", function(accounts) {
       startTime,
       "0"
     );
-    await token.addAuthorized(pollContract.address);
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[2]);

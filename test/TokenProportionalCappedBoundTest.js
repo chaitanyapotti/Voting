@@ -35,14 +35,13 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
       [protocol1Contract.address, protocol2Contract.address, protocol3Contract.address],
       ["0x68656c6c6f", "0x776f726c64"],
       token.address,
-      1,
+      100,
       "0x57616e636861696e",
       "0x41646d696e20456c656374696f6e20466f722032303138",
       "0x4f6e6520506572736f6e204f6e6520566f7465",
       startTime,
       "1000000"
     );
-    await token.addAuthorized(pollContract.address);
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[2]);

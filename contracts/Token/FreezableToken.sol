@@ -1,15 +1,10 @@
 pragma solidity ^0.4.25;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
-import "../ownership/Authorizable.sol";
 import "./IFreezableToken.sol";
 
 
-//Authorizable because contracts(poll) can freeze funds
-//Note that poll contract must be added into Authorizable
-//This can be inherited because Authorizable is deployed with Freezable Token
-contract FreezableToken is ERC20, Authorizable, IFreezableToken, MinterRole {
+contract FreezableToken is ERC20, IFreezableToken {
     struct FreezablePolls {
         uint currentPollsParticipating;
         mapping(address => bool) pollAddress;
@@ -34,7 +29,7 @@ contract FreezableToken is ERC20, Authorizable, IFreezableToken, MinterRole {
         _;
     }
 
-    function freezeAccount(address _target) external onlyAuthorized {
+    function freezeAccount(address _target) external {
         FreezablePolls storage user = frozenAccounts[_target];
         require(!user.pollAddress[msg.sender], "Already frozen by this poll");
         user.currentPollsParticipating += 1;
@@ -42,7 +37,7 @@ contract FreezableToken is ERC20, Authorizable, IFreezableToken, MinterRole {
         emit FrozenFunds(_target, true);
     }
 
-    function unFreezeAccount(address _target) external onlyAuthorized {
+    function unFreezeAccount(address _target) external {
         FreezablePolls storage user = frozenAccounts[_target];
         require(user.pollAddress[msg.sender], "Not already frozen by this poll");
         user.currentPollsParticipating -= 1;
@@ -73,14 +68,13 @@ contract FreezableToken is ERC20, Authorizable, IFreezableToken, MinterRole {
         return _mintingFinished;
     }
 
-    function mint(address _to, uint256 _amount) public onlyMinter 
-        onlyBeforeMintingFinished returns (bool) {
+    function mint(address _to, uint256 _amount) public onlyBeforeMintingFinished returns (bool) {
         require(totalSupply() <= totalMintableSupply, "Can't mint more than totalSupply");
         _mint(_to, _amount);
         return true;
     }
 
-    function finishMinting() public onlyMinter onlyBeforeMintingFinished returns (bool) {
+    function finishMinting() public onlyBeforeMintingFinished returns (bool) {
         _mintingFinished = true;
         emit MintingFinish();
         return true;
