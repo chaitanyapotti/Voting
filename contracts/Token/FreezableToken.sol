@@ -22,14 +22,18 @@ contract FreezableToken is ERC20, IFreezableToken {
         _;
     }
 
-     // @dev Limit token transfer if _sender is frozen.
+    // @dev Limit token transfer if _sender is frozen.
     modifier canTransfer(address _sender) {
         FreezablePolls storage user = frozenAccounts[_sender];
         require(user.currentPollsParticipating == 0, "Is part of certain polls");
         _;
     }
 
-    function freezeAccount(address _target) external {
+    function isFrozen(address _target) external view returns(bool) {
+        return (frozenAccounts[_target].currentPollsParticipating != 0);
+    }
+
+    function freezeAccount(address _target) public {
         FreezablePolls storage user = frozenAccounts[_target];
         require(!user.pollAddress[msg.sender], "Already frozen by this poll");
         user.currentPollsParticipating += 1;
@@ -37,18 +41,14 @@ contract FreezableToken is ERC20, IFreezableToken {
         emit FrozenFunds(_target, true);
     }
 
-    function unFreezeAccount(address _target) external {
+    function unFreezeAccount(address _target) public {
         FreezablePolls storage user = frozenAccounts[_target];
         require(user.pollAddress[msg.sender], "Not already frozen by this poll");
         user.currentPollsParticipating -= 1;
         user.pollAddress[msg.sender] = false;
         emit FrozenFunds(_target, false);
     }
-
-    function isFrozen(address _target) external view returns(bool) {
-        return (frozenAccounts[_target].currentPollsParticipating != 0);
-    }
-
+    
     function transfer(address _to, uint256 _value) public canTransfer(msg.sender) returns (bool success) {
         // Call StandardToken.transfer()
         return super.transfer(_to, _value);
