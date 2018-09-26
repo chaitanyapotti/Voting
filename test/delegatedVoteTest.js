@@ -85,17 +85,15 @@ contract("DelegatedVoteTest", function(accounts) {
     truffleAssert.eventEmitted(vote, "CastVote");
     truffleAssert.eventNotEmitted(vote, "TriedToVote");
   });
-  // it("cast vote : delegation loop - failure", async () => {
-  //   await pollContract.delegate(accounts[2], { from: accounts[1] });
-  //   await pollContract.delegate(accounts[3], { from: accounts[2] });
-  //   // await pollContract.delegate(accounts[4], { from: accounts[3] });
-  //   // await pollContract.delegate(accounts[5], { from: accounts[4] });
-  //   try {
-  //     await assertRevert(pollContract.delegate(accounts[1], { from: accounts[3] }));
-  //   } catch (error) {
-  //     assert.exists(error);
-  //   }
-  // });
+  it("cast vote : delegation loop - failure", async () => {
+    await pollContract.delegate(accounts[2], { from: accounts[1] });
+    await pollContract.delegate(accounts[3], { from: accounts[2] });
+    try {
+      await assertRevert(pollContract.delegate(accounts[1], { from: accounts[3] }));
+    } catch (error) {
+      assert.exists(error);
+    }
+  });
   it("cast vote : member with delegations", async () => {
     await increaseTime(10000);
     await pollContract.delegate(accounts[1], { from: accounts[2] });
