@@ -17,8 +17,8 @@ contract TokenProportionalCappedBound is BasePollBound {
         _duration) {
         token = FreezableToken(_tokenAddress);
         capPercent = _capPercent;
-        capWeight = SafeMath.mul(_capPercent, token.getTotalMintableSupply());
-        require(_capPercent < 100, "Percentage must be less than 100");
+        capWeight = SafeMath.div(SafeMath.mul(_capPercent, token.getTotalMintableSupply()), 100);
+        require(_capPercent < 1000, "Percentage must be less than 10");
     }
 
     function vote(uint8 _proposal) external checkTime {
