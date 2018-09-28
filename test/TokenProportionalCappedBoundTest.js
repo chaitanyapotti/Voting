@@ -119,4 +119,12 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     await increaseTime(1000000000000);
     await assertRevert(pollContract.unFreezeTokens({ from: accounts[2] }));
   });
+  it("checks whether the minting is finished or not", async () => {
+    const result = await token.mintingFinished();
+    assert.equal(result, false);
+  });
+  it("finishes minting", async () => {
+    const result = await token.finishMinting();
+    truffleAssert.eventEmitted(result, "MintingFinish");
+  });
 });
