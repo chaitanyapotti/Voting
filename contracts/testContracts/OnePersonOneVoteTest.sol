@@ -2,9 +2,10 @@ pragma solidity ^0.4.25;
 
 import "../poll/OnePersonOneVote.sol";
 import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
+import "../ownership/Authorizable.sol";
 
 
-contract OnePersonOneVoteTest is OnePersonOneVote {
+contract OnePersonOneVoteTest is OnePersonOneVote, Authorizable {
     
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic,
     bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 

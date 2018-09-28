@@ -41,6 +41,22 @@ contract("One Person One Vote Test", function(accounts) {
       "0"
     );
   });
+  it("tests is autorized method", async () => {
+    const result = await pollContract.isAuthorized(accounts[1]);
+    assert.equal(result, false);
+  });
+  it("Adds Authorization and later removes it ", async () => {
+    await pollContract.addAuthorized(accounts[1]);
+    await pollContract.removeAuthorized(accounts[1]);
+  });
+  it("Adds Authorization for a member and that member revokes membership himself ", async () => {
+    await pollContract.addAuthorized(accounts[1]);
+    await pollContract.selfRemoveAuthorized({ from: accounts[1] });
+  });
+  it("Adds Authorization for a member and that member transfer ownership ", async () => {
+    await pollContract.addAuthorized(accounts[1]);
+    await pollContract.transferAuthorization(accounts[2], { from: accounts[1] });
+  });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
     assert.equal(web3.utils.toDecimal(voteWeight), 1);
