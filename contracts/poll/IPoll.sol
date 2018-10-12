@@ -22,7 +22,7 @@ interface IPoll {
     /// @param _from User who successfully unvoted
     /// @param _to the index of the proposal he unvoted
     /// @param voteWeight the weight of his vote
-    event RevokedVote(address indexed _from, uint8 _to, uint voteWeight);
+    event RevokedVote(address indexed _from, uint8 indexed _to, uint voteWeight);
 
     /// @notice Handles the vote logic
     /// @dev updates the appropriate data structures regarding the vote.
