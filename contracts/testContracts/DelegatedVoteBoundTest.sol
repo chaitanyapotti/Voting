@@ -21,4 +21,20 @@ contract DelegatedVoteBoundTest is DelegatedVoteBound {
         contract3.getAttributeByName(_to, 0x6861697200000000000000000000000000000000000000000000000000000000) 
         == 0x626c61636b000000000000000000000000000000000000000000000000000000);
     }
+
+    function getVoterBaseDenominator() public view returns (uint) {
+        uint totalMemberCount = 0;
+        if (proposals.length <= 1) {
+            for (uint i = 0; i < protocolAddresses.length; i++) {
+                IERC1261 instance = IERC1261(protocolAddresses[i]);
+                totalMemberCount += instance.getCurrentMemberCount();
+            }
+            return totalMemberCount;
+        }
+        uint proposalWeight = 0;
+        for (uint8 index = 0; index < proposals.length; index++) {
+            proposalWeight += proposals[index].voteWeight;
+        }
+        return proposalWeight;
+    }
 }   

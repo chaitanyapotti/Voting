@@ -146,4 +146,5 @@ contract BasePoll is IPoll {
     //return contract1.isCurrentMember(_to);
     function canVote(address _to) public view returns (bool);
     function calculateVoteWeight(address _to) public view returns (uint);    
+    function getVoterBaseDenominator() public view returns (uint);
 }

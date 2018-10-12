@@ -23,4 +23,20 @@ contract KarmaVoteTest is KarmaVote {
         KarmaProtocol contract1 = KarmaProtocol(protocolAddresses[0]);
         return (contract1.getCurrentKarma(_to) + 1);
     }
+
+    function getVoterBaseDenominator() public view returns (uint) {
+        uint totalMemberCount = 0;
+        if (proposals.length <= 1) {
+            for (uint i = 0; i < protocolAddresses.length; i++) {
+                KarmaProtocol instance = KarmaProtocol(protocolAddresses[i]);
+                totalMemberCount += instance.getTotalKarma();
+            }
+            return totalMemberCount;
+        }
+        uint proposalWeight = 0;
+        for (uint8 index = 0; index < proposals.length; index++) {
+            proposalWeight += proposals[index].voteWeight;
+        }
+        return proposalWeight;
+    }
 }   

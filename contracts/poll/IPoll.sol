@@ -111,4 +111,11 @@ interface IPoll {
     /// @dev limit the proposal count to 32 (for practical reasons), loop and generate the vote count list
     /// @return the list of voter count against all proposals
     function getVoterCounts() external view returns (uint[]);
+
+    /// @notice For single proposal polls, returns the total voterbase count. 
+    ///  For multi proposal polls, returns the total vote weight against all proposals
+    ///  this is used to calculate the percentages for each proposal
+    /// @dev limit the proposal count to 32 (for practical reasons), loop and generate the voter base denominator
+    /// @return an integer which specifies the above mentioned amount
+    function getVoterBaseDenominator() external view returns (uint);
 }
