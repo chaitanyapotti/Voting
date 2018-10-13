@@ -45,7 +45,7 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[2]);
-    assert.equal(web3.utils.toDecimal(voteWeight), 100);
+    assert.equal(web3.utils.toDecimal(voteWeight), 10000);
   });
   it("calculate vote weight : not a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[3]);
@@ -55,7 +55,7 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[2] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.utils.toDecimal(voteTally), 100);
+    assert.equal(web3.utils.toDecimal(voteTally), 10000);
     assert.equal(await token.isFrozen(accounts[2]), true);
     truffleAssert.eventEmitted(result, "CastVote");
   });
@@ -85,7 +85,7 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     await increaseTime(10000);
     const result = await pollContract.vote(1, { from: accounts[2] });
     const voteTally = await pollContract.getVoteTally(1);
-    assert.equal(web3.utils.toDecimal(voteTally), 100);
+    assert.equal(web3.utils.toDecimal(voteTally), 10000);
     const result1 = await pollContract.vote(1, { from: accounts[2] });
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventEmitted(result1, "TriedToVote");
@@ -94,7 +94,7 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
   it("revoke vote: is a member & voted (poll has started and in progress)", async () => {
     await increaseTime(10000);
     await pollContract.vote(1, { from: accounts[2] });
-    assert.equal(await pollContract.getVoteTally(1), 100);
+    assert.equal(web3.utils.toDecimal(await pollContract.getVoteTally(1)), 10000);
     assert.equal(await pollContract.getVoterCount(1), 1);
     assert.equal(await token.isFrozen(accounts[2]), true);
     const revokeResult = await pollContract.revokeVote({ from: accounts[2] });
