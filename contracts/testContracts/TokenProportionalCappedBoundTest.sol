@@ -7,7 +7,7 @@ import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 contract TokenProportionalCappedBoundTest is TokenProportionalCappedBound {
     
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, 
-    bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
+    bytes _voterBaseLogic, bytes _pollName, bytes _pollType, uint _startTime, uint _duration) 
         public TokenProportionalCappedBound(_protocolAddresses, _proposalNames, _tokenAddress, _capPercent,
         _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {   
         }

@@ -6,8 +6,8 @@ import "./BasePoll.sol";
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter
 contract DelegatedVote is BasePoll {
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, 
-        bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes _voterBaseLogic, 
+        bytes _pollName, bytes _pollType, uint _startTime, uint _duration) 
         public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType,
             _startTime, _duration) {
         

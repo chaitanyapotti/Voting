@@ -12,7 +12,7 @@ contract TokenProportionalUncapped is BasePoll {
     FreezableToken public token;
 
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, 
-    bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public BasePoll
+    bytes _voterBaseLogic, bytes _pollName, bytes _pollType, uint _startTime, uint _duration) public BasePoll
         (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
         token = FreezableToken(_tokenAddress);
     }
