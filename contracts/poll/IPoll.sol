@@ -74,18 +74,18 @@ interface IPoll {
     /// @notice gets the name of the poll e.g.: "Admin Election for Autumn 2018"
     /// @dev Set the name in the constructor of the poll
     /// @return the name of the poll
-    function getName() external view returns (bytes);
+    function getName() external view returns (bytes32);
     
     /// @notice gets the type of the Poll e.g.: Token (XYZ) weighted poll
     /// @dev Set the poll type in the constructor of the poll
     /// @return the type of the poll
-    function getPollType() external view returns (bytes);
+    function getPollType() external view returns (bytes32);
 
     /// @notice gets the logic to be used in a poll's `canVote` function 
     ///  e.g.: "XYZ Token | US & China(attributes in erc-1261) | Developers(attributes in erc-1261)"
     /// @dev Set the Voterbase logic in the constructor of the poll
     /// @return the voterbase logic
-    function getVoterBaseLogic() external view returns (bytes);
+    function getVoterBaseLogic() external view returns (bytes32);
 
     /// @notice gets the start time for the poll
     /// @dev Set the start time in the constructor of the poll as Unix Standard Time

@@ -6,8 +6,8 @@ import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
 
 contract TokenProportionalUncappedTest is TokenProportionalUncapped {
     
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes _voterBaseLogic,
-    bytes _pollName, bytes _pollType, uint _startTime, uint _duration) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic,
+    bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
         public TokenProportionalUncapped(_protocolAddresses, _proposalNames, _tokenAddress, _voterBaseLogic, _pollName,
         _pollType, _startTime, _duration) {
         }

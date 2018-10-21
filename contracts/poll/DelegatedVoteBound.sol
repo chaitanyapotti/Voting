@@ -9,8 +9,8 @@ import "./BasePollBound.sol";
 //These contracts will usually be deployed by Action contracts. Hence, these must refer Authorizable
 contract DelegatedVoteBound is BasePollBound {
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes _voterBaseLogic, bytes _pollName, 
-        bytes _pollType, uint _startTime, uint _duration) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, 
+        bytes32 _pollType, uint _startTime, uint _duration) 
         public BasePollBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, 
             _startTime, _duration) {
         }

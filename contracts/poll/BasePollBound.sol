@@ -11,8 +11,8 @@ contract BasePollBound is BasePoll {
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes _voterBaseLogic, bytes _pollName, 
-        bytes _pollType, uint _startTime, uint _duration) 
+    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, 
+        bytes32 _pollType, uint _startTime, uint _duration) 
         public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, 
             _startTime, _duration) {
         }
