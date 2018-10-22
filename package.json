@@ -1,6 +1,6 @@
 {
   "name": "electusvoting",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "electusprotocol": "^1.4.1",
+    "electusprotocol": "^1.5.0",
     "truffle-assertions": "^0.6.2"
   },
   "devDependencies": {
