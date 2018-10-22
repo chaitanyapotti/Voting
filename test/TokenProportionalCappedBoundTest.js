@@ -127,4 +127,10 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
     const result = await token.finishMinting();
     truffleAssert.eventEmitted(result, "MintingFinish");
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[2] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 10000);
+  });
 });

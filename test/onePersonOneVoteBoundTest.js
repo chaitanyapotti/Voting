@@ -82,4 +82,10 @@ contract("One Person One Vote Bound Test", function(accounts) {
     const endTime = await pollContract.getEndTime();
     assert.equal(web3.utils.toDecimal(endTime), startTime + 1000000);
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[1] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 1);
+  });
 });

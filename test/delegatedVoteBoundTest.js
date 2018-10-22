@@ -116,4 +116,10 @@ contract("DelegatedVoteBoundTest", function(accounts) {
   it("can't delegate as poll hasn't started yet", async () => {
     await assertRevert(pollContract.delegate(accounts[1], { from: accounts[2] }));
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[1] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 1);
+  });
 });

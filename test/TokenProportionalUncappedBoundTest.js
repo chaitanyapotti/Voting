@@ -106,4 +106,10 @@ contract("Token Proportional Uncapped Bound Test", function(accounts) {
     await increaseTime(1000000000000);
     await assertRevert(pollContract.unFreezeTokens({ from: accounts[2] }));
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[2] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 100);
+  });
 });

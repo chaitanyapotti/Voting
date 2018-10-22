@@ -103,4 +103,10 @@ contract("Token Proportional Capped Test", function(accounts) {
     await increaseTime(10000);
     await assertRevert(pollContract.revokeVote({ from: accounts[3] }));
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[2] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 5000);
+  });
 });

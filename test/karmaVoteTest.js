@@ -185,4 +185,11 @@ contract("Karma Vote Test", function(accounts) {
   it("tries to vote : but poll hasn't started yet", async () => {
     await assertRevert(pollContract.vote(1, { from: accounts[1] }));
   });
+
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[1] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 1);
+  });
 });

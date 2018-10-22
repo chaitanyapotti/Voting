@@ -74,4 +74,10 @@ contract("Karma Vote Bound Test", function(accounts) {
     const result = await pollContract.hasPollEnded({ from: accounts[1] });
     assert.equal(result, false);
   });
+  it("gets proposal vote weight", async () => {
+    await increaseTime(10000);
+    await pollContract.vote(1, { from: accounts[1] });
+    const proposalWeight = await pollContract.getVoterBaseDenominator();
+    assert.equal(web3.utils.toDecimal(proposalWeight), 1);
+  });
 });
