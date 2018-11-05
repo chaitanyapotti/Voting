@@ -19,7 +19,7 @@ npm install
 ## Contracts
 
 The protocol level contracts use OpenZeppelin extensively for referencing standard EIPs.
-Electus Protocol utilizes OpenZeppelin's implementations for EIP-165.
+Electus Voting utilizes OpenZeppelin's implementations for EIP-165.
 Please refer to OpenZeppelin's github page [here](https://github.com/OpenZeppelin/openzeppelin-solidity)
 
 ## truffle
@@ -91,7 +91,7 @@ truffle test
 
 Electus Voting is meant to provide secure, tested and community-audited code, but please use common sense when doing anything that deals with real money! We take no responsibility for your implementation decisions and any security problem you might experience.
 
-The core development principles and strategies that Electus Protocol is based on include: security in depth, simple and modular code, clarity-driven naming conventions, comprehensive unit testing, pre-and-post-condition sanity checks, code consistency, and regular audits.
+The core development principles and strategies that Electus Voting is based on include: security in depth, simple and modular code, clarity-driven naming conventions, comprehensive unit testing, pre-and-post-condition sanity checks, code consistency, and regular audits.
 
 If you find a security issue, please email [chaitanya@electus.network](mailto:chaitanya@electus.network).
 

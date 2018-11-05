@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 import "../poll/DelegatedVoteBound.sol";
-import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
+import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 
 
 contract DelegatedVoteBoundTest is DelegatedVoteBound {

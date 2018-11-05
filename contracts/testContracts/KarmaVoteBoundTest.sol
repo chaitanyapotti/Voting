@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 import "../poll/KarmaVoteBound.sol";
-import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
+import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 import "../protocol/KarmaProtocol.sol";
 
 

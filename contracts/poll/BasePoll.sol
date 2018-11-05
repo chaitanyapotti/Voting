@@ -1,6 +1,6 @@
 pragma solidity ^0.4.25;
 
-import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
+import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 import "./IPoll.sol";
 
 

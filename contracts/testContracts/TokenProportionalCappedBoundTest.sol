@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 import "../poll/TokenProportionalCappedBound.sol";
-import "electusprotocol/contracts/Protocol/IElectusProtocol.sol";
+import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 
 
 contract TokenProportionalCappedBoundTest is TokenProportionalCappedBound {
