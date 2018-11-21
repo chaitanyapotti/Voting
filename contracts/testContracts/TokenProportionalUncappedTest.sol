@@ -19,7 +19,7 @@ contract TokenProportionalUncappedTest is TokenProportionalUncapped {
         IERC1261 contract3 = IERC1261(protocolAddresses[2]);
         return (contract1.isCurrentMember(_to) || 
         contract2.isCurrentMember(_to)) && (contract3.isCurrentMember(_to) &&
-        contract3.getAttributeByName(_to, 0x6861697200000000000000000000000000000000000000000000000000000000) 
+        contract3.getAttributeByIndex(_to, 0) 
         == 0x626c61636b000000000000000000000000000000000000000000000000000000);
     }
 

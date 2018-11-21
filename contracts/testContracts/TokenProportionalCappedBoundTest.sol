@@ -19,13 +19,13 @@ contract TokenProportionalCappedBoundTest is TokenProportionalCappedBound {
         IERC1261 contract3 = IERC1261(protocolAddresses[2]);
         return (contract1.isCurrentMember(_to) || 
         contract2.isCurrentMember(_to)) && (contract3.isCurrentMember(_to) &&
-        contract3.getAttributeByName(_to, 0x6861697200000000000000000000000000000000000000000000000000000000)
+        contract3.getAttributeByIndex(_to, 0)
         == 0x626c61636b000000000000000000000000000000000000000000000000000000);
     }
 
     function getVoterBaseDenominator() public view returns (uint) {
         if (proposals.length <= 1) {
-            return token.totalSupply();
+            return SafeMath.mul(token.totalSupply(), 100);
         }
         uint proposalWeight = 0;
         for (uint8 index = 0; index < proposals.length; index++) {

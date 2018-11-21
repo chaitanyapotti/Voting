@@ -45,6 +45,6 @@ contract("Token Proportional Capped Bound Test", function(accounts) {
   });
   it("gets total member count", async () => {
     const totalSupply = await pollContract.getVoterBaseDenominator();
-    assert.equal(web3.utils.toDecimal(totalSupply), 100000);
+    assert.equal(web3.utils.toDecimal(totalSupply), 10000000);
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "electusvoting",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "membershipverificationtoken": "^2.2.0",
+    "membershipverificationtoken": "^2.3.0",
     "truffle-assertions": "^0.6.3"
   },
   "devDependencies": {
