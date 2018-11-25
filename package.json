@@ -1,6 +1,6 @@
 {
   "name": "electusvoting",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "membershipverificationtoken": "^2.3.0",
+    "membershipverificationtoken": "^2.4.1",
     "truffle-assertions": "^0.6.3"
   },
   "devDependencies": {
@@ -64,9 +64,9 @@
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "lint-staged": "^8.0.5",
+    "lint-staged": "^8.1.0",
     "prettier": "^1.15.2",
     "solhint": "^1.4.0",
-    "husky": "^1.1.4"
+    "husky": "^1.2.0"
   }
 }
