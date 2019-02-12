@@ -51,7 +51,7 @@
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
     "membershipverificationtoken": "^2.4.2",
-    "truffle-assertions": "^0.6.3"
+    "truffle-assertions": "^0.7.0"
   },
   "devDependencies": {
     "solidity-coverage": "^0.5.11",
