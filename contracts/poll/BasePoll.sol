@@ -46,8 +46,8 @@ contract BasePoll is IPoll {
 
     constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, 
         bytes32 _pollType, uint _startTime, uint _duration) public {
-        //Make sure _proposalNames length < 32
-        require(_proposalNames.length <= 32, "Proposals must be less than 32");
+        //Make sure _proposalNames length < 255
+        require(_proposalNames.length <= 255, "Proposals must be less than 255");
         protocolAddresses = _protocolAddresses;
         voterBaseLogic = _voterBaseLogic;
         pollName = _pollName;
