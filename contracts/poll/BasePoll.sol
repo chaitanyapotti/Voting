@@ -88,7 +88,7 @@ contract BasePoll is IPoll {
     }
 
     function getProposals() external view returns (bytes32[]) {
-        bytes32[] memory proposalNames = new bytes32[](32);
+        bytes32[] memory proposalNames = new bytes32[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalNames[index] = (proposals[index].name);
         }
@@ -100,7 +100,7 @@ contract BasePoll is IPoll {
     }
 
     function getVoteTallies() external view returns (uint[]) {
-        uint[] memory proposalWeights = new uint[](32);
+        uint[] memory proposalWeights = new uint[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalWeights[index] = proposals[index].voteWeight;
         }
@@ -112,7 +112,7 @@ contract BasePoll is IPoll {
     }
 
     function getVoterCounts() external view returns (uint[]) {        
-        uint[] memory proposalCounts = new uint[](32);
+        uint[] memory proposalCounts = new uint[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalCounts[index] = proposals[index].voteCount;
         }
