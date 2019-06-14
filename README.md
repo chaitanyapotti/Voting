@@ -97,7 +97,7 @@ Electus Voting is meant to provide secure, tested and community-audited code, bu
 
 The core development principles and strategies that Electus Voting is based on include: security in depth, simple and modular code, clarity-driven naming conventions, comprehensive unit testing, pre-and-post-condition sanity checks, code consistency, and regular audits.
 
-If you find a security issue, please email [chaitanya@electus.network](mailto:chaitanya@electus.network).
+If you find a security issue, please email [chaitanya.potti@gmail.com](mailto:chaitanya.potti@gmail.com).
 
 ## Contributing
 
