@@ -1,6 +1,6 @@
 {
   "name": "electusvoting",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
@@ -13,17 +13,21 @@
     "coverage": "touch allFiredEvents & solidity-coverage",
     "prettier": "prettier --write \"**/*.{js,json,css,md}\"",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-    "lint:sol": "solhint contracts/**/*.sol",
-    "lint:js": "eslint test/**/*.js"
+    "lint:sol": "prettier --write contracts/**/*.sol",
+    "lint:js": "eslint --fix test/**/*.js"
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix test/**/*.js",
-      "prettier --write",
+      "npm run lint:js --",
+      "prettier --write **/*.js",
       "git add"
     ],
     "*.sol": [
-      "prettier --write **/*.sol",
+      "npm run lint:sol --",
+      "git add"
+    ],
+    "*.{json,css}": [
+      "prettier --write **/*.json",
       "git add"
     ]
   },
@@ -61,7 +65,7 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "membershipverificationtoken": "^2.5.4",
+    "membershipverificationtoken": "^2.5.5",
     "truffle-assertions": "^0.9.1"
   },
   "devDependencies": {
@@ -76,7 +80,6 @@
     "eslint-plugin-standard": "^4.0.0",
     "lint-staged": "^9.0.0",
     "husky": "^3.0.0",
-    "lint-staged": "^8.2.1"
     "prettier": "^1.18.2",
     "solhint": "^2.1.0",
     "solidity-coverage": "^0.5.11",
