@@ -3,7 +3,6 @@ pragma solidity ^0.4.25;
 import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 import "./IPoll.sol";
 
-
 contract BasePoll is IPoll {
     struct Proposal {
         uint voteCount;
@@ -13,7 +12,7 @@ contract BasePoll is IPoll {
 
     struct Voter {
         bool voted;
-        uint8 vote;   // index of the voted proposal
+        uint8 vote; // index of the voted proposal
         address delegate;
         uint weight;
         //uint timeStamp;
@@ -44,8 +43,15 @@ contract BasePoll is IPoll {
         _;
     }
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, 
-        bytes32 _pollType, uint _startTime, uint _duration) public {
+    constructor(
+        address[] _protocolAddresses,
+        bytes32[] _proposalNames,
+        bytes32 _voterBaseLogic,
+        bytes32 _pollName,
+        bytes32 _pollType,
+        uint _startTime,
+        uint _duration
+    ) public {
         //Make sure _proposalNames length < 255
         require(_proposalNames.length <= 255, "Proposals must be less than 255");
         protocolAddresses = _protocolAddresses;
@@ -111,7 +117,7 @@ contract BasePoll is IPoll {
         return proposals[_proposalId].voteCount;
     }
 
-    function getVoterCounts() external view returns (uint[]) {        
+    function getVoterCounts() external view returns (uint[]) {
         uint[] memory proposalCounts = new uint[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalCounts[index] = proposals[index].voteCount;
@@ -130,12 +136,12 @@ contract BasePoll is IPoll {
         }
         return winningProposalIndex;
     }
-    
+
     function hasPollStarted() public view returns (bool) {
         return (now >= startTime);
     }
 
-    //This is to be filled by user before deploying poll. 
+    //This is to be filled by user before deploying poll.
     //User can't deploy a poll without implementing canVote function.
     //Can't be modified after poll is deployed. Here is a sample.
     //You can also use attributes to set parameters here
@@ -145,6 +151,6 @@ contract BasePoll is IPoll {
     //&& contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India')
     //return contract1.isCurrentMember(_to);
     function canVote(address _to) public view returns (bool);
-    function calculateVoteWeight(address _to) public view returns (uint);    
+    function calculateVoteWeight(address _to) public view returns (uint);
     function getVoterBaseDenominator() public view returns (uint);
 }

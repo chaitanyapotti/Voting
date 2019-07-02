@@ -4,14 +4,16 @@ import "../poll/KarmaVoteBound.sol";
 import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 import "../protocol/KarmaProtocol.sol";
 
-
 contract KarmaVoteBoundTest is KarmaVoteBound {
-    
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic,
-    bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
-        public KarmaVoteBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType,
-        _startTime, _duration) {        
-        }
+    constructor(
+        address[] _protocolAddresses,
+        bytes32[] _proposalNames,
+        bytes32 _voterBaseLogic,
+        bytes32 _pollName,
+        bytes32 _pollType,
+        uint _startTime,
+        uint _duration
+    ) public KarmaVoteBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {}
 
     function canVote(address _to) public view returns (bool) {
         //return true;
@@ -39,4 +41,4 @@ contract KarmaVoteBoundTest is KarmaVoteBound {
         }
         return proposalWeight;
     }
-}   
+}

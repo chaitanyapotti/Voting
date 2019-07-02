@@ -2,9 +2,7 @@ pragma solidity ^0.4.25;
 
 import "membershipverificationtoken/contracts/ERC1261MetaData.sol";
 
-
 contract KarmaProtocol is ERC1261MetaData {
-
     struct KarmaData {
         uint currentKarma;
         mapping(address => bool) givenFrom;
@@ -14,8 +12,7 @@ contract KarmaProtocol is ERC1261MetaData {
 
     uint private totalKarmaPresent;
 
-    constructor(bytes32 _orgName, bytes32 _orgSymbol) public ERC1261MetaData(_orgName, _orgSymbol) {
-    }
+    constructor(bytes32 _orgName, bytes32 _orgSymbol) public ERC1261MetaData(_orgName, _orgSymbol) {}
 
     function getCurrentKarma(address _to) public view returns (uint) {
         return karma[_to].currentKarma;

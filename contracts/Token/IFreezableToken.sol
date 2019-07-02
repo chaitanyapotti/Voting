@@ -1,6 +1,5 @@
 pragma solidity ^0.4.25;
 
-
 interface IFreezableToken {
     event FrozenFunds(address target, bool frozen);
 

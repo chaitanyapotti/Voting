@@ -3,23 +3,40 @@ pragma solidity ^0.4.25;
 import "../poll/TokenProportionalCappedBound.sol";
 import "membershipverificationtoken/contracts/Protocol/IERC1261.sol";
 
-
 contract TokenProportionalCappedBoundTest is TokenProportionalCappedBound {
-    
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, uint _capPercent, 
-    bytes32 _voterBaseLogic, bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) 
-        public TokenProportionalCappedBound(_protocolAddresses, _proposalNames, _tokenAddress, _capPercent,
-        _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {   
-        }
+    constructor(
+        address[] _protocolAddresses,
+        bytes32[] _proposalNames,
+        address _tokenAddress,
+        uint _capPercent,
+        bytes32 _voterBaseLogic,
+        bytes32 _pollName,
+        bytes32 _pollType,
+        uint _startTime,
+        uint _duration
+    )
+        public
+        TokenProportionalCappedBound(
+            _protocolAddresses,
+            _proposalNames,
+            _tokenAddress,
+            _capPercent,
+            _voterBaseLogic,
+            _pollName,
+            _pollType,
+            _startTime,
+            _duration
+        )
+    {}
 
     function canVote(address _to) public view returns (bool) {
         //return true;
         IERC1261 contract1 = IERC1261(protocolAddresses[0]);
         IERC1261 contract2 = IERC1261(protocolAddresses[1]);
         IERC1261 contract3 = IERC1261(protocolAddresses[2]);
-        return (contract1.isCurrentMember(_to) || 
-        contract2.isCurrentMember(_to)) && (contract3.isCurrentMember(_to) &&
-        contract3.getAttributeByIndex(_to, 0) == 0);
+        return (contract1.isCurrentMember(_to) || contract2.isCurrentMember(_to)) && (
+            contract3.isCurrentMember(_to) && contract3.getAttributeByIndex(_to, 0) == 0
+        );
     }
 
     function getVoterBaseDenominator() public view returns (uint) {
@@ -32,4 +49,4 @@ contract TokenProportionalCappedBoundTest is TokenProportionalCappedBound {
         }
         return proposalWeight;
     }
-}   
+}

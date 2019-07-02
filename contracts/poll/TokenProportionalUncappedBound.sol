@@ -3,21 +3,26 @@ pragma solidity ^0.4.25;
 import "./BasePollBound.sol";
 import "../Token/FreezableToken.sol";
 
-
 contract TokenProportionalUncappedBound is BasePollBound {
-
     FreezableToken public token;
 
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, address _tokenAddress, bytes32 _voterBaseLogic,
-    bytes32 _pollName, bytes32 _pollType, uint _startTime, uint _duration) public BasePollBound
-    (_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
+    constructor(
+        address[] _protocolAddresses,
+        bytes32[] _proposalNames,
+        address _tokenAddress,
+        bytes32 _voterBaseLogic,
+        bytes32 _pollName,
+        bytes32 _pollType,
+        uint _startTime,
+        uint _duration
+    ) public BasePollBound(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {
         token = FreezableToken(_tokenAddress);
     }
 
     function vote(uint8 _proposal) external checkTime {
         Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        
+
         if (canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;

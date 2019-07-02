@@ -2,20 +2,22 @@ pragma solidity ^0.4.25;
 
 import "./BasePoll.sol";
 
-
 //these poll contracts are independent. Hence, protocol must be passed as a ctor parameter
 contract OnePersonOneVote is BasePoll {
-
-    constructor(address[] _protocolAddresses, bytes32[] _proposalNames, bytes32 _voterBaseLogic, bytes32 _pollName, 
-        bytes32 _pollType, uint _startTime, uint _duration) 
-        public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, 
-        _startTime, _duration) {
-        }
+    constructor(
+        address[] _protocolAddresses,
+        bytes32[] _proposalNames,
+        bytes32 _voterBaseLogic,
+        bytes32 _pollName,
+        bytes32 _pollType,
+        uint _startTime,
+        uint _duration
+    ) public BasePoll(_protocolAddresses, _proposalNames, _voterBaseLogic, _pollName, _pollType, _startTime, _duration) {}
 
     function vote(uint8 _proposal) external isPollStarted {
-        Voter storage sender = voters[msg.sender]; 
+        Voter storage sender = voters[msg.sender];
         uint voteWeight = calculateVoteWeight(msg.sender);
-        
+
         if (canVote(msg.sender) && !sender.voted && _proposal < proposals.length) {
             sender.voted = true;
             sender.vote = _proposal;
@@ -33,7 +35,7 @@ contract OnePersonOneVote is BasePoll {
         require(sender.voted, "Hasn't yet voted.");
         uint8 votedProposal = sender.vote;
         uint voteWeight = sender.weight;
-        sender.voted = false;        
+        sender.voted = false;
         proposals[sender.vote].voteWeight -= sender.weight;
         proposals[sender.vote].voteCount -= 1;
         sender.vote = 0;

@@ -3,7 +3,6 @@ pragma solidity ^0.4.25;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "./IFreezableToken.sol";
 
-
 contract FreezableToken is ERC20, IFreezableToken {
     struct FreezablePolls {
         uint currentPollsParticipating;
@@ -15,7 +14,7 @@ contract FreezableToken is ERC20, IFreezableToken {
     event MintingFinish();
     event FrozenFunds(address target, bool frozen);
 
-    mapping (address => FreezablePolls) public frozenAccounts;
+    mapping(address => FreezablePolls) public frozenAccounts;
 
     modifier onlyBeforeMintingFinished() {
         require(!_mintingFinished);
@@ -29,7 +28,7 @@ contract FreezableToken is ERC20, IFreezableToken {
         _;
     }
 
-    function isFrozen(address _target) external view returns(bool) {
+    function isFrozen(address _target) external view returns (bool) {
         return (frozenAccounts[_target].currentPollsParticipating != 0);
     }
 
@@ -48,14 +47,13 @@ contract FreezableToken is ERC20, IFreezableToken {
         user.pollAddress[msg.sender] = false;
         emit FrozenFunds(_target, false);
     }
-    
+
     function transfer(address _to, uint256 _value) public canTransfer(msg.sender) returns (bool success) {
         // Call StandardToken.transfer()
         return super.transfer(_to, _value);
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) public canTransfer(_from) 
-    returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public canTransfer(_from) returns (bool success) {
         // Call StandardToken.transferForm()
         return super.transferFrom(_from, _to, _value);
     }
@@ -64,7 +62,7 @@ contract FreezableToken is ERC20, IFreezableToken {
         return totalMintableSupply;
     }
 
-    function mintingFinished() public view returns(bool) {
+    function mintingFinished() public view returns (bool) {
         return _mintingFinished;
     }
 
@@ -80,5 +78,3 @@ contract FreezableToken is ERC20, IFreezableToken {
         return true;
     }
 }
-
-
