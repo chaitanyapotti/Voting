@@ -1,6 +1,6 @@
 {
   "name": "electusvoting",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "Standard implementation and interface for Voting",
   "main": "index.js",
   "scripts": {
