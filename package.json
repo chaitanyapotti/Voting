@@ -65,7 +65,7 @@
   },
   "homepage": "https://github.com/chaitanyapotti/Voting#readme",
   "dependencies": {
-    "membershipverificationtoken": "^2.5.5",
+    "membershipverificationtoken": "^2.5.7",
     "truffle-assertions": "^0.9.1"
   },
   "devDependencies": {
@@ -78,13 +78,13 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "lint-staged": "^9.0.0",
+    "lint-staged": "^9.1.0",
     "husky": "^3.0.0",
     "prettier": "^1.18.2",
-    "prettier-plugin-solidity": "^1.0.0-alpha.26",
+    "prettier-plugin-solidity": "^1.0.0-alpha.27",
     "solhint": "^2.1.0",
     "solhint-plugin-prettier": "0.0.3",
     "solidity-coverage": "^0.5.11",
-    "truffle": "^5.0.25"
+    "truffle": "^5.0.26"
   }
 }
