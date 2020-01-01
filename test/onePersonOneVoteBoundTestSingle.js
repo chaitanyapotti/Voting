@@ -38,7 +38,7 @@ contract("One Person One Vote Bound Test", function(accounts) {
   });
   it("gets total member count", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const memberCount = await pollContract.getVoterBaseDenominator();
     assert.equal(web3.utils.toDecimal(memberCount), 3);
   });

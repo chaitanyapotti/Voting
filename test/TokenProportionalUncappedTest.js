@@ -2,7 +2,7 @@ var TokenProportionalUncappedTest = artifacts.require("./TokenProportionalUncapp
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
 var TestToken = artifacts.require("./FreezableTestToken.sol");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("Token Proportional Uncapped Test", function(accounts) {
@@ -52,39 +52,39 @@ contract("Token Proportional Uncapped Test", function(accounts) {
   });
   it("cast vote: is a member & poll has started", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[2] });
+    const result = await pollContract.vote(1, {from: accounts[2]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 100);
     assert.equal(await token.isFrozen(accounts[2]), true);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member & poll has not started", async () => {
-    await assertRevert(pollContract.vote(1, { from: accounts[2] }));
+    await assertRevert(pollContract.vote(1, {from: accounts[2]}));
   });
   it("cast vote: not a member & poll has started", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[3] });
+    const result = await pollContract.vote(1, {from: accounts[3]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
   });
   it("cast vote: is a member voted & tries to vote again", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[2] });
+    const result = await pollContract.vote(1, {from: accounts[2]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 100);
-    const result1 = await pollContract.vote(1, { from: accounts[1] });
+    const result1 = await pollContract.vote(1, {from: accounts[1]});
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventEmitted(result1, "TriedToVote");
     truffleAssert.eventNotEmitted(result1, "CastVote");
   });
   it("revoke vote: is a member & voted (poll has started and in progress)", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[2] });
+    await pollContract.vote(1, {from: accounts[2]});
     assert.equal(await pollContract.getVoteTally(1), 100);
     assert.equal(await pollContract.getVoterCount(1), 1);
     assert.equal(await token.isFrozen(accounts[2]), true);
-    const revokeResult = await pollContract.revokeVote({ from: accounts[2] });
+    const revokeResult = await pollContract.revokeVote({from: accounts[2]});
     assert.equal(await pollContract.getVoteTally(1), 0);
     assert.equal(await pollContract.getVoterCount(1), 0);
     assert.equal(await token.isFrozen(accounts[2]), false);
@@ -92,15 +92,15 @@ contract("Token Proportional Uncapped Test", function(accounts) {
   });
   it("revoke vote: is a member & not voted", async () => {
     await increaseTime(10000);
-    await assertRevert(pollContract.revokeVote({ from: accounts[2] }));
+    await assertRevert(pollContract.revokeVote({from: accounts[2]}));
   });
   it("revoke vote: not a member", async () => {
     await increaseTime(10000);
-    await assertRevert(pollContract.revokeVote({ from: accounts[3] }));
+    await assertRevert(pollContract.revokeVote({from: accounts[3]}));
   });
   it("gets proposal vote weight", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[2] });
+    await pollContract.vote(1, {from: accounts[2]});
     const proposalWeight = await pollContract.getVoterBaseDenominator();
     assert.equal(web3.utils.toDecimal(proposalWeight), 100);
   });

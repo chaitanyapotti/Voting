@@ -1,7 +1,7 @@
 var KarmaVoteBoundTest = artifacts.require("./KarmaVoteBoundTest.sol");
 var KarmaProtocol = artifacts.require("./KarmaProtocol.sol");
 const truffleAssert = require("truffle-assertions");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("Karma Vote Bound Test", function(accounts) {
@@ -44,39 +44,39 @@ contract("Karma Vote Bound Test", function(accounts) {
   });
   it("cast vote: is a member & poll has started", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[1] });
+    const result = await pollContract.vote(1, {from: accounts[1]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 1);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member & poll has not started", async () => {
-    await assertRevert(pollContract.vote(1, { from: accounts[1] }));
+    await assertRevert(pollContract.vote(1, {from: accounts[1]}));
   });
   it("cast vote: not a member & poll has started", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[7] });
+    const result = await pollContract.vote(1, {from: accounts[7]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 0);
     truffleAssert.eventEmitted(result, "TriedToVote");
   });
   it("revoke vote: is a member & voted (poll has started)", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     assert.equal(await pollContract.getVoteTally(1), 1);
     assert.equal(await pollContract.getVoterCount(1), 1);
-    const revokeResult = await pollContract.revokeVote({ from: accounts[1] });
+    const revokeResult = await pollContract.revokeVote({from: accounts[1]});
     assert.equal(await pollContract.getVoteTally(1), 0);
     assert.equal(await pollContract.getVoterCount(1), 0);
     truffleAssert.eventEmitted(revokeResult, "RevokedVote");
   });
   it("has poll ended", async () => {
     await increaseTime(10000);
-    const result = await pollContract.hasPollEnded({ from: accounts[1] });
+    const result = await pollContract.hasPollEnded({from: accounts[1]});
     assert.equal(result, false);
   });
   it("gets proposal vote weight", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const proposalWeight = await pollContract.getVoterBaseDenominator();
     assert.equal(web3.utils.toDecimal(proposalWeight), 1);
   });

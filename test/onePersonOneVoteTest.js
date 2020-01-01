@@ -1,7 +1,7 @@
 var OnePersonOneVoteTest = artifacts.require("./OnePersonOneVoteTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("One Person One Vote Test", function(accounts) {
@@ -51,11 +51,11 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("Adds Authorization for a member and that member revokes membership himself ", async () => {
     await pollContract.addAuthorized(accounts[1]);
-    await pollContract.selfRemoveAuthorized({ from: accounts[1] });
+    await pollContract.selfRemoveAuthorized({from: accounts[1]});
   });
   it("Adds Authorization for a member and that member transfer ownership ", async () => {
     await pollContract.addAuthorized(accounts[1]);
-    await pollContract.transferAuthorization(accounts[2], { from: accounts[1] });
+    await pollContract.transferAuthorization(accounts[2], {from: accounts[1]});
   });
   it("calculate vote weight : is a member", async () => {
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
@@ -67,14 +67,14 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("cast vote: is a member", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[1] });
+    const result = await pollContract.vote(1, {from: accounts[1]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 1);
     truffleAssert.eventEmitted(result, "CastVote");
   });
   it("cast vote: is a member but gives wrong proposal", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(2, { from: accounts[1] });
+    const result = await pollContract.vote(2, {from: accounts[1]});
     const voteTally0 = await pollContract.getVoteTally(0);
     const voteTally1 = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally0), 0);
@@ -84,7 +84,7 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("cast vote: not a member", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[3] });
+    const result = await pollContract.vote(1, {from: accounts[3]});
     const voteTally0 = await pollContract.getVoteTally(0);
     const voteTally1 = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally0), 0);
@@ -94,22 +94,22 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("cast vote: is a member voted & tries to vote again", async () => {
     await increaseTime(10000);
-    const result = await pollContract.vote(1, { from: accounts[1] });
+    const result = await pollContract.vote(1, {from: accounts[1]});
     const voteTally = await pollContract.getVoteTally(1);
     assert.equal(web3.utils.toDecimal(voteTally), 1);
-    const result1 = await pollContract.vote(1, { from: accounts[1] });
+    const result1 = await pollContract.vote(1, {from: accounts[1]});
     truffleAssert.eventEmitted(result, "CastVote");
     truffleAssert.eventEmitted(result1, "TriedToVote");
     truffleAssert.eventNotEmitted(result1, "CastVote");
   });
   it("revoke vote: is a member & voted", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const voteTally = await pollContract.getVoteTally(1);
     const voterCount = await pollContract.getVoterCount(1);
     assert.equal(web3.utils.toDecimal(voteTally), 1);
     assert.equal(web3.utils.toDecimal(voterCount), 1); // proposal voter count
-    const revokeResult = await pollContract.revokeVote({ from: accounts[1] });
+    const revokeResult = await pollContract.revokeVote({from: accounts[1]});
     const voteTally1 = await pollContract.getVoteTally(1);
     const voterCount1 = await pollContract.getVoterCount(1);
     assert.equal(web3.utils.toDecimal(voteTally1), 0);
@@ -118,14 +118,14 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("revoke vote: is a member & not voted", async () => {
     await increaseTime(10000);
-    await assertRevert(pollContract.revokeVote({ from: accounts[1] }));
+    await assertRevert(pollContract.revokeVote({from: accounts[1]}));
   });
   it("revoke vote: not a member", async () => {
     await increaseTime(10000);
-    await assertRevert(pollContract.revokeVote({ from: accounts[3] }));
+    await assertRevert(pollContract.revokeVote({from: accounts[3]}));
   });
   it("tries to vote : but poll hasn't started yet", async () => {
-    await assertRevert(pollContract.vote(1, { from: accounts[1] }));
+    await assertRevert(pollContract.vote(1, {from: accounts[1]}));
   });
   it("gets poll name", async () => {
     const pollName = await pollContract.getName();
@@ -159,29 +159,29 @@ contract("One Person One Vote Test", function(accounts) {
   });
   it("gets vote tallies", async () => {
     await increaseTime(10000);
-    await pollContract.vote(0, { from: accounts[1] });
-    await pollContract.vote(1, { from: accounts[2] });
+    await pollContract.vote(0, {from: accounts[1]});
+    await pollContract.vote(1, {from: accounts[2]});
     const voteTallies = await pollContract.getVoteTallies();
     assert.equal(web3.utils.toDecimal(voteTallies[0]), 1);
     assert.equal(web3.utils.toDecimal(voteTallies[1]), 1);
   });
   it("gets voter counts", async () => {
     await increaseTime(10000);
-    await pollContract.vote(0, { from: accounts[1] });
-    await pollContract.vote(1, { from: accounts[2] });
+    await pollContract.vote(0, {from: accounts[1]});
+    await pollContract.vote(1, {from: accounts[2]});
     const voterCounts = await pollContract.getVoterCounts();
     assert.equal(web3.utils.toDecimal(voterCounts[0]), 1);
     assert.equal(web3.utils.toDecimal(voterCounts[1]), 1);
   });
   it("gets winning proposal", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const winninfProposalIndex = await pollContract.winningProposal();
     assert.equal(web3.utils.toDecimal(winninfProposalIndex), 1);
   });
   it("gets proposal vote weight", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const proposalWeight = await pollContract.getVoterBaseDenominator();
     assert.equal(web3.utils.toDecimal(proposalWeight), 1);
   });

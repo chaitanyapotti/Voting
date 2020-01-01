@@ -2,7 +2,7 @@ var TokenProportionalCappedBoundTest = artifacts.require("./TokenProportionalCap
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
 var TestToken = artifacts.require("./FreezableTestToken.sol");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("Token Proportional Capped Bound Test", function(accounts) {

@@ -1,7 +1,7 @@
 var DelegatedVoteBoundTest = artifacts.require("./DelegatedVoteBoundTest.sol");
 var ElectusProtocol = artifacts.require("./Protocol.sol");
 const truffleAssert = require("truffle-assertions");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("DelegatedVoteBoundTest", function(accounts) {
@@ -64,19 +64,19 @@ contract("DelegatedVoteBoundTest", function(accounts) {
   });
   it("calculate vote weight : is a member and has delegation", async () => {
     await increaseTime(10000);
-    await pollContract.delegate(accounts[1], { from: accounts[2] });
+    await pollContract.delegate(accounts[1], {from: accounts[2]});
     const voteWeight = await pollContract.calculateVoteWeight(accounts[1]);
     assert.equal(web3.utils.toDecimal(voteWeight), 2);
   });
   it("calculate vote weight : is a member & delegated his vote", async () => {
     await increaseTime(10000);
-    await pollContract.delegate(accounts[1], { from: accounts[2] });
+    await pollContract.delegate(accounts[1], {from: accounts[2]});
     const voteWeight = await pollContract.calculateVoteWeight(accounts[2]);
     assert.equal(web3.utils.toDecimal(voteWeight), 0);
   });
   it("cast vote : member with no delegation", async () => {
     await increaseTime(10000);
-    const vote = await pollContract.vote(0, { from: accounts[1] });
+    const vote = await pollContract.vote(0, {from: accounts[1]});
     const proposalVoteWeight = await pollContract.getVoteTally(0);
     assert.equal(web3.utils.toDecimal(proposalVoteWeight), 1);
     truffleAssert.eventEmitted(vote, "CastVote");
@@ -94,16 +94,16 @@ contract("DelegatedVoteBoundTest", function(accounts) {
   // });
   it("cast vote : not a member", async () => {
     await increaseTime(10000);
-    const vote = await pollContract.vote(0, { from: accounts[6] });
+    const vote = await pollContract.vote(0, {from: accounts[6]});
     truffleAssert.eventEmitted(vote, "TriedToVote");
     truffleAssert.eventNotEmitted(vote, "CastVote");
   });
   it("delgation to a member who has already voted", async () => {
     await increaseTime(10000);
-    const vote = await pollContract.vote(0, { from: accounts[1] });
-    await pollContract.delegate(accounts[1], { from: accounts[2] });
-    await pollContract.delegate(accounts[1], { from: accounts[3] });
-    await pollContract.delegate(accounts[1], { from: accounts[4] });
+    const vote = await pollContract.vote(0, {from: accounts[1]});
+    await pollContract.delegate(accounts[1], {from: accounts[2]});
+    await pollContract.delegate(accounts[1], {from: accounts[3]});
+    await pollContract.delegate(accounts[1], {from: accounts[4]});
     const voteWeight = await pollContract.getVoteTally(0);
     assert.equal(web3.utils.toDecimal(voteWeight), 4);
     truffleAssert.eventEmitted(vote, "CastVote");
@@ -114,11 +114,11 @@ contract("DelegatedVoteBoundTest", function(accounts) {
     await assertRevert(pollContract.revokeVote());
   });
   it("can't delegate as poll hasn't started yet", async () => {
-    await assertRevert(pollContract.delegate(accounts[1], { from: accounts[2] }));
+    await assertRevert(pollContract.delegate(accounts[1], {from: accounts[2]}));
   });
   it("gets proposal vote weight", async () => {
     await increaseTime(10000);
-    await pollContract.vote(1, { from: accounts[1] });
+    await pollContract.vote(1, {from: accounts[1]});
     const proposalWeight = await pollContract.getVoterBaseDenominator();
     assert.equal(web3.utils.toDecimal(proposalWeight), 1);
   });

@@ -1,7 +1,7 @@
 var KarmaVoteTest = artifacts.require("./KarmaVoteTest.sol");
 var KarmaProtocol = artifacts.require("./KarmaProtocol.sol");
 const truffleAssert = require("truffle-assertions");
-const { assertRevert } = require("./utils/assertRevert");
+const {assertRevert} = require("./utils/assertRevert");
 const increaseTime = require("./utils/increaseTime");
 
 contract("Karma Vote Test", function(accounts) {
